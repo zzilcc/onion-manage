@@ -1,96 +1,94 @@
 /*
- * @Description: In User Settings Editco
- * @Author: your name
- * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-26 15:05:13
- * @LastEditors: Please set LastEditors
+ * @Author: 黄紫茜
+ * @Date: 2019-09-27 14:45:28
+ * @LastEditors: 黄紫茜
+ * @LastEditTime: 2019-09-27 15:00:43
+ * @Description: 
  */
-let path = require("path");
-//去console插件
-// const TerserPlugin = require("terser-webpack-plugin");
-//打包分析
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-// const cdnPlugin = require("webpack-cdn-plugin");
-
+const path = require('path');
+ 
 function resolve(dir) {
-  return path.join(__dirname, dir);
+  return path.join(__dirname, dir)
 }
-
-//对一些不经常改动的库，可以通过cdn引入，webpack不对他们打包
-let externals = {
-  vue: "Vue",
-  axios: "axios",
-  "element-ui": "ELEMENT",
-  "vue-router": "VueRouter",
-  vuex: "Vuex",
-};
+ 
+// 导入compression-webpack-plugin
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+// const externals = {
+//   'vue': 'Vue',
+//   'vue-router': 'VueRouter',
+//   'vuex': 'Vuex',
+//   'axios': 'axios',
+//   'ELEMENT': 'element-ui'
+// }
+// 定义压缩文件类型
+const productionGzipExtensions = ['js', 'css']
+ 
 module.exports = {
-  //基本路径
-  publicPath: "/dist/",
-  //输出文件目录
-  outputDir: "dist",
-  //放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
-  assetsDir: "static",
-  //生产环境不需要生产map文件
+  publicPath: '/vue-qiugu-ms/', //基本路径
+  outputDir: 'dist',
   productionSourceMap: false,
-  chainWebpack: config => {
-    //这里是对环境的配置，不同的环境对应不同的BASE_URL
-    config.plugin("define").tap(args => {
-      args[0]["process.env"].VUE_APP_LOGOUT_URL = JSON.stringify(
-        process.env.VUE_APP_LOGOUT_URL
+  assetsDir: 'static',
+  filenameHashing: true,
+  pages: {
+    index: {
+      // page 的入口
+      entry: "src/main.js",
+      // 模板来源
+      template: "public/index.html", // 这里用来区分加载那个 html
+      // 在 dist/index.html 的输出
+      filename: "index.html",
+      // 在这个页面中包含的块，默认情况下会包含
+      // 提取出来的通用 chunk 和 vendor chunk。
+      chunks: ["chunk-vendors", "chunk-common", "index"]
+    }
+  },
+  // 高级的方式
+  configureWebpack: config => {
+    if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+      // config.externals = externals
+      config.plugins.push(
+        new CompressionWebpackPlugin({
+          filename: '[path].gz[query]',
+          algorithm: 'gzip',
+          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+          threshold: 10240,
+          minRatio: 0.8
+        }),
+      //   new UglifyJsPlugin({
+      //     uglifyOptions: {
+      //       compress: {
+      //         warnings: false,
+      //         drop_debugger: true,
+      //         drop_console: true,
+      //       },
+      //     },
+      //     sourceMap: false,
+      //     parallel: true,
+      //   }),
       );
-      console.log(args[0]);
-      return args;
-    });
-
-    //只在生产环境生效
-    if (process.env.VUE_APP_CURRENTMODE === "production") {
-      config.externals(externals);
-      config.optimization.minimize(true);
-      config.optimization.splitChunks({
-        chunks: "all",
-        cacheGroups: {
-          public: {
-            name: "public",
-            test: resolve("src/components"),
-            minSize: 0, //表示在压缩前的最小模块大小,默认值是 30kb
-            minChunks: 2, // 最小公用次数
-            priority: 5, // 优先级
-            reuseExistingChunk: true // 公共模块必开启
-          },
-          vendors: {
-            test: /[\\/]node_modules[\\/]/,
-            priority: -10
-          }
-        }
-      });
+      const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+      config.plugins.push(new BundleAnalyzerPlugin());
     }
-    //设置别名
-    config.resolve.alias
-      .set("@", resolve("src"))
-      .set("@api", resolve("src/api/api")) //接口地址
-      .set("@assets", resolve("src/assets"))
-      .set("@components", resolve("src/components"));
   },
+  // CSS 相关选项
+  css: {
+    extract: true,
+    sourceMap: false,
+    loaderOptions: {}, // 为所有的 CSS 及其预处理文件开启 CSS Modules。
+    modules: false
+  },
+  // 在多核机器下会默认开启。
+  parallel: require('os').cpus().length > 1,
+  // PWA 插件的选项。
+  pwa: {},
+  // 配置 webpack-dev-server 行为。
   devServer: {
-    port: 9090, // 端口
-    open: true, // 自动开启浏览器
-    compress: false, // 开启压缩
-    overlay: {
-      warnings: true,
-      errors: true
-    }
+    port: 3001,
+    open: true,
+    proxy: 'http://localhost:8080'
   },
-  //定义scss全局变量
-  // css: {
-  //   // 是否使用css分离插件 ExtractTextPlugin
-  //   extract: true,
-  //   // 开启 CSS source maps?
-  //   sourceMap: false,
-  //   // loaderOptions: {
-  //   //   sass: {
-  //   //     data: `@import "@/assets/scss/global.scss";`
-  //   //   }
-  //   // }
-  // }
-};
+  
+  // 第三方插件的选项
+  pluginOptions: {}
+}
