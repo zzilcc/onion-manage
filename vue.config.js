@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:45:28
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-27 15:00:43
+ * @LastEditTime: 2019-09-27 15:08:25
  * @Description: 
  */
 const path = require('path');
@@ -25,7 +25,7 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const productionGzipExtensions = ['js', 'css']
  
 module.exports = {
-  publicPath: '/vue-qiugu-ms/', //基本路径
+  publicPath: process.env.NODE_ENV === "production" ? "/onion-manage" : "/", //基本路径
   outputDir: 'dist',
   productionSourceMap: false,
   assetsDir: 'static',

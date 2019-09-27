@@ -1,3 +1,10 @@
+<!--
+ * @Author: 黄紫茜
+ * @Date: 2019-09-27 14:46:04
+ * @LastEditors: 黄紫茜
+ * @LastEditTime: 2019-09-27 15:14:28
+ * @Description: 
+ -->
 <template>
   <div>
     <el-card class="box-card">
@@ -51,15 +58,7 @@ export default {
     /**
      *  提交添加商品分类的表单
      */
-    submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
+    submitForm() {
       },
        /**
        *  重置添加商品分类的表单
