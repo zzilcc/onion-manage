@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:45:28
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-27 15:33:16
+ * @LastEditTime: 2019-09-27 16:40:29
  * @Description: 
  */
 const path = require('path');
@@ -86,7 +86,7 @@ module.exports = {
   devServer: {
     port: 3001,
     open: true,
-    proxy: 'http://localhost:8080'
+    proxy: ''
   },
   
   // 第三方插件的选项

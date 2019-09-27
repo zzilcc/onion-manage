@@ -2,8 +2,8 @@
  * @Description: 商品列表
  * @Author: 黄紫茜
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-26 10:06:31
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-27 16:58:57
+ * @LastEditors: 黄紫茜
  -->
 <template>
   <div>
@@ -109,6 +109,7 @@
   </div>
 </template>
 <script>
+import { goodsList } from "@/api/api.js";
 export default { 
   data () {
     return {
@@ -191,6 +192,20 @@ export default {
   },
   methods: {
     /**
+     * @description:  获取商品列表
+     * @param {type} 
+     * @return: 
+     */
+    getGoodsList () {
+      goodsList()
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    /**
      * 添加分类
      */
     addGoods () {
@@ -205,6 +220,9 @@ export default {
       this.activeIndex = keyPath[0]
       console.log(key, keyPath)
     }
+  },
+  created () {
+    this.getGoodsList()
   }
 }
 </script>

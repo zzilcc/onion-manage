@@ -208,7 +208,6 @@ export default {
      *  提交添加商品的表单
      */
     submitForm(formName) {
-      debugger;
       console.log(this.ruleForm);
       console.log(formName);
       console.log(this.fileList);

@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-27 15:31:03
+ * @LastEditTime: 2019-09-27 16:32:37
  * @Description: 
  -->
 <template>
@@ -29,18 +29,26 @@
         sortable>
       </el-table-column>
       <el-table-column
-        prop="keyword"
+        prop="level"
         label="级别"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="categoryDescription"
+        prop="number"
         label="商品数量">
       </el-table-column>
       <el-table-column
         prop="createTime"
         label="查看"
         sortable>
+        <template slot-scope="scope">
+          <el-button
+            @click.native.prevent="lookChildren(scope)"
+            type="text"
+            size="small">
+            二级等级
+          </el-button>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -75,102 +83,16 @@ export default {
     return {
       tableData: [
         {
-          "id": 3,
-          "categoryName": "祛痘", // 分类名称
-          "parentId": 1, // 父分类
-          "sort": 3, // 排序方式
-          "isshow": 0, // 是否显示
-          "icon": "祛痘", // 分类icon
-          "keyword": null, // 关键字
-          "categoryDescription": "祛痘描述", // 分类描述
-          "createUid": 1, // 分类id
-          "createTime": "2019-09-09T06:26:29.000+0000", // 创建时间
-          "updateTime": "2019-09-09T06:26:29.000+0000", // 更新时间
-          "status": 0 // 分类状态
+          "id": 1,
+          "categoryName": "去黑头", // 分类名称
+          "level": 1, // 分类等级
+          "number": 0, // 商品数量
         },
         {
           "id": 3,
           "categoryName": "祛痘", // 分类名称
-          "parentId": 1, // 父分类
-          "sort": 3, // 排序方式
-          "isshow": 0, // 是否显示
-          "icon": "祛痘", // 分类icon
-          "keyword": null, // 关键字
-          "categoryDescription": "祛痘描述", // 分类描述
-          "createUid": 1, // 分类id
-          "createTime": "2019-09-09T06:26:29.000+0000", // 创建时间
-          "updateTime": "2019-09-09T06:26:29.000+0000", // 更新时间
-          "status": 0 // 分类状态
-        },
-        {
-          "id": 3,
-          "categoryName": "祛痘", // 分类名称
-          "parentId": 1, // 父分类
-          "sort": 3, // 排序方式
-          "isshow": 0, // 是否显示
-          "icon": "祛痘", // 分类icon
-          "keyword": null, // 关键字
-          "categoryDescription": "祛痘描述", // 分类描述
-          "createUid": 1, // 分类id
-          "createTime": "2019-09-09T06:26:29.000+0000", // 创建时间
-          "updateTime": "2019-09-09T06:26:29.000+0000", // 更新时间
-          "status": 0 // 分类状态
-        },
-        {
-          "id": 3,
-          "categoryName": "祛痘", // 分类名称
-          "parentId": 1, // 父分类
-          "sort": 3, // 排序方式
-          "isshow": 0, // 是否显示
-          "icon": "祛痘", // 分类icon
-          "keyword": null, // 关键字
-          "categoryDescription": "祛痘描述", // 分类描述
-          "createUid": 1, // 分类id
-          "createTime": "2019-09-09T06:26:29.000+0000", // 创建时间
-          "updateTime": "2019-09-09T06:26:29.000+0000", // 更新时间
-          "status": 0 // 分类状态
-        },
-        {
-          "id": 3,
-          "categoryName": "祛痘", // 分类名称
-          "parentId": 1, // 父分类
-          "sort": 3, // 排序方式
-          "isshow": 0, // 是否显示
-          "icon": "祛痘", // 分类icon
-          "keyword": null, // 关键字
-          "categoryDescription": "祛痘描述", // 分类描述
-          "createUid": 1, // 分类id
-          "createTime": "2019-09-09T06:26:29.000+0000", // 创建时间
-          "updateTime": "2019-09-09T06:26:29.000+0000", // 更新时间
-          "status": 0 // 分类状态
-        },
-        {
-          "id": 3,
-          "categoryName": "祛痘", // 分类名称
-          "parentId": 1, // 父分类
-          "sort": 3, // 排序方式
-          "isshow": 0, // 是否显示
-          "icon": "祛痘", // 分类icon
-          "keyword": null, // 关键字
-          "categoryDescription": "祛痘描述", // 分类描述
-          "createUid": 1, // 分类id
-          "createTime": "2019-09-09T06:26:29.000+0000", // 创建时间
-          "updateTime": "2019-09-09T06:26:29.000+0000", // 更新时间
-          "status": 0 // 分类状态
-        },
-        {
-          "id": 3,
-          "categoryName": "祛痘", // 分类名称
-          "parentId": 1, // 父分类
-          "sort": 3, // 排序方式
-          "isshow": 0, // 是否显示
-          "icon": "祛痘", // 分类icon
-          "keyword": null, // 关键字
-          "categoryDescription": "祛痘描述", // 分类描述
-          "createUid": 1, // 分类id
-          "createTime": "2019-09-09T06:26:29.000+0000", // 创建时间
-          "updateTime": "2019-09-09T06:26:29.000+0000", // 更新时间
-          "status": 0 // 分类状态
+          "level": 1, // 分类等级
+          "number": 0, // 商品数量
         },
 
       ]
@@ -182,6 +104,14 @@ export default {
      */
     addGoodsCategories () {
       this.$router.push({path: '/addGoodsCategories'})
+    },
+    /**
+     * @description: 查看二级分类
+     * @param {scope: 某一行的数据} 
+     * @return: 
+     */  
+    lookChildren (scope) {
+      console.log(scope)
     }
   }
 }

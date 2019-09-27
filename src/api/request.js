@@ -1,9 +1,16 @@
+/*
+ * @Author: 黄紫茜
+ * @Date: 2019-09-27 14:46:04
+ * @LastEditors: 黄紫茜
+ * @LastEditTime: 2019-09-27 16:58:47
+ * @Description: 
+ */
 import axios from "axios";
 import router from "../router/router";
 import {messages} from '../assets/js/common.js'
 import store from '../store/store'
 axios.defaults.timeout = 60000;
-axios.defaults.baseURL = process.env.VUE_APP_LOGOUT_URL;
+axios.defaults.baseURL = "http://tadmin.yuxinhz.cn";
 axios.defaults.headers.post["Content-Type"] =
     "application/x-www-form-urlencoded;charset=UTF-8";
 let loading = null;
@@ -13,12 +20,8 @@ let loading = null;
  */
 axios.interceptors.request.use(
     config => {
-        loading = Loading.service({
-            text: "正在加载中......",
-            fullscreen: true
-        });
         if (store.state.token) {
-            config.headers["Authorization"] = "Bearer " + store.state.token;
+            // config.headers["Authorization"] = "Bearer " + store.state.token;
         }
         return config;
     },
@@ -35,7 +38,7 @@ axios.interceptors.response.use(
         return new Promise((resolve, reject) => {
             //请求成功后关闭加载框
             if (loading) {
-                loading.close();
+                // loading.close();
             }
             const res = response.data;
             if (res.err_code === 0) {
@@ -49,7 +52,7 @@ axios.interceptors.response.use(
         console.log(error)
         //请求成功后关闭加载框
         if (loading) {
-            loading.close();
+            // loading.close();
         }
         //断网处理或者请求超时
         if (!error.response) {
