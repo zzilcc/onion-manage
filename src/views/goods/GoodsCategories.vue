@@ -1,3 +1,10 @@
+<!--
+ * @Author: 黄紫茜
+ * @Date: 2019-09-27 14:46:04
+ * @LastEditors: 黄紫茜
+ * @LastEditTime: 2019-09-27 15:31:03
+ * @Description: 
+ -->
 <template>
   <div>
     <!-- <el-card class="box-card"> -->
@@ -12,6 +19,10 @@
       stripe
       style="width: 100%">
       <el-table-column
+          type="index"
+          width="50">
+      </el-table-column>
+      <el-table-column
         prop="categoryName"
         label="分类名称"
         width="180"
@@ -19,26 +30,16 @@
       </el-table-column>
       <el-table-column
         prop="keyword"
-        label="分类关键字"
+        label="级别"
         width="180">
       </el-table-column>
       <el-table-column
         prop="categoryDescription"
-        label="分类描述">
+        label="商品数量">
       </el-table-column>
       <el-table-column
         prop="createTime"
-        label="分类创建时间"
-        sortable>
-      </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        label="分类更新时间"
-        sortable>
-      </el-table-column>
-      <el-table-column
-        prop="status"
-        label="分类状态"
+        label="查看"
         sortable>
       </el-table-column>
       <el-table-column
@@ -47,16 +48,16 @@
         width="120">
         <template slot-scope="scope">
           <el-button
+            @click.native.prevent="updateRow(scope.$index, tableData)"
+            type="text"
+            size="small">
+            编辑
+          </el-button>
+          <el-button
             @click.native.prevent="deleteRow(scope.$index, tableData)"
             type="text"
             size="small">
             移除
-          </el-button>
-          <el-button
-            @click.native.prevent="updateRow(scope.$index, tableData)"
-            type="text"
-            size="small">
-            修改
           </el-button>
         </template>
       </el-table-column>
