@@ -1,3 +1,10 @@
+/*
+ * @Author: 黄紫茜
+ * @Date: 2019-09-27 14:46:04
+ * @LastEditors: 黄紫茜
+ * @LastEditTime: 2019-09-27 14:46:04
+ * @Description: 
+ */
 module.exports = {
   root: true,
   env: {
@@ -8,7 +15,7 @@ module.exports = {
     'eslint:recommended'
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
   parserOptions: {

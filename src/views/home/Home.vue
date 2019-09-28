@@ -1,3 +1,10 @@
+<!--
+ * @Author: 黄紫茜
+ * @Date: 2019-09-27 14:46:04
+ * @LastEditors: 黄紫茜
+ * @LastEditTime: 2019-09-28 10:05:04
+ * @Description: 
+ -->
 <template>
   <div id="js-manage">
      <section class="onion-index">
@@ -55,17 +62,17 @@
                   </template>
                   <el-menu-item-group>
                     <router-link to="goodsList">
-                      <el-menu-item index="1-1">商品列表</el-menu-item>
+                      <el-menu-item index="1-1">商品管理</el-menu-item>
                     </router-link>
-                    <router-link to="addGoods">
+                    <!-- <router-link to="addGoods">
                       <el-menu-item index="1-2">添加商品</el-menu-item>
-                    </router-link>
+                    </router-link> -->
                     <router-link to="goodsCategories">
-                      <el-menu-item index="1-3">商品分类</el-menu-item>
+                      <el-menu-item index="1-3">分类管理</el-menu-item>
                     </router-link>
-                    <router-link to="addGoodsCategories">
+                    <!-- <router-link to="addGoodsCategories">
                       <el-menu-item index="1-4">添加商品分类</el-menu-item>
-                    </router-link>
+                    </router-link> -->
                   </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="3">

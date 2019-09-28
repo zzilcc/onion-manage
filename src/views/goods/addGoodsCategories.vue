@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-27 15:59:02
+ * @LastEditTime: 2019-09-28 10:11:54
  * @Description: 
  -->
 <template>
@@ -12,7 +12,7 @@
         <el-form-item label="商品分类名称" prop="name">
           <el-input v-model="ruleForm.categoryName" placeholder="商品分类名称"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类">
+        <el-form-item label="上级分类" v-show="ruleForm.level !== '一级分类'">
           <el-select v-model="ruleForm.level" placeholder="请选择">
               <el-option
                 v-for="item in options"
@@ -31,14 +31,15 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default { 
   data () {
     return {
-      ruleForm: {
-        "id": 1,
-        "categoryName": "", // 分类名称
-        "level": '', // 分类等级
-      },
+      // ruleForm: {
+      //   "id": 1,
+      //   "categoryName": "", // 分类名称
+      //   "level": '', // 分类等级
+      // },
       options: [
         {
           value: "选项1",
@@ -56,18 +57,33 @@ export default {
         }
     }
   },
+  computed: {
+    ruleForm () {
+      return this.$store.state.categoriesListRow
+    }
+  },
   methods: {
     /**
      *  提交添加商品分类的表单
      */
     submitForm() {
-      },
-       /**
-       *  重置添加商品分类的表单
-       */
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      }
+      let _this = this
+      axios
+        .post('http://tadmin.yuxinhz.cn/api/category/update', this.ruleForm)
+        .then(res => {
+          console.log(res)
+          _this.$router.push({path: '/goodsCategories'})
+        })
+        .catch(err => {
+          console.log(err)
+        });
+    },
+      /**
+     *  重置添加商品分类的表单
+     */
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    }
   }
 }
 </script>

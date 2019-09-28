@@ -2,18 +2,25 @@
  * @Description: 商品列表
  * @Author: 黄紫茜
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-27 16:58:57
+ * @LastEditTime: 2019-09-28 10:25:42
  * @LastEditors: 黄紫茜
  -->
 <template>
   <div>
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">出售中</el-menu-item>
-      <el-menu-item index="2">告罄中</el-menu-item>
-      <el-menu-item index="3">仓库中</el-menu-item>
+      <el-menu-item index="0">出售中</el-menu-item>
+      <el-menu-item index="-1">告罄中</el-menu-item>
     </el-menu>
     <!-- <el-card class="box-card"> -->
     <section class="onion-goods-add">
+      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-goods-add_form" >
+        <el-form-item label="商品名称">
+          <el-input v-model="reqParam.suppliesName" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchClick">查询</el-button>
+        </el-form-item>
+      </el-form>
       <el-button type="primary" @click="addGoods">添加商品</el-button>
     </section>
     <!-- </el-card> -->
@@ -75,25 +82,25 @@
           width="120">
           <template slot-scope="scope">
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData)"
+              @click.native.prevent="editRow(scope.row)"
               type="text"
               size="small">
               编辑
             </el-button>
-            <el-button v-if="activeIndex !== '3'"
-              @click.native.prevent="updateRow(scope.$index, tableData)"
+            <el-button v-if="activeIndex === '0'"
+              @click.native.prevent="soldOutGoods(scope.row)"
               type="text"
               size="small">
               下架
             </el-button>
             <el-button
-              @click.native.prevent="updateRow(scope.$index, tableData)"
+              @click.native.prevent="putawayGoods(scope.row)"
               type="text"
-              size="small" v-if="activeIndex === '3'">
+              size="small" v-if="activeIndex === '-1'">
               上架
             </el-button>
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData)"
+              @click.native.prevent="deleteGoods(scope.row)"
               type="text"
               size="small">
               删除
@@ -109,7 +116,8 @@
   </div>
 </template>
 <script>
-import { goodsList } from "@/api/api.js";
+// import { goodsList } from "@/api/api.js";
+import axios from "axios";
 export default { 
   data () {
     return {
@@ -161,49 +169,49 @@ export default {
           "createTime": '1', 
           "updateTime": '1', 
           "putawayStatus": 0, // 上下架状态 0表示上架 1 表示下架
-        },
-        {
-          "productId": '1', //  商品ID
-          "suppliesCode": '1',  //  物料代码
-          "suppliesName": '1', // 物料名字（商品名字）
-          "intro": '11', // 商品简介
-          "specification": '1', // 商品规格
-          "unit": '1', // 商品规格单位
-          "shelfLife": '1', // 保质期
-          "bannerPicture": '1', // banner图片路径
-          "listPicture": '1', // 商品列表图片路径
-          "imageText": [], // 商品详情里的图文
-          "categoryId": '1', // 分类ID
-          "brand": '1', // 品牌
-          "efficacy": '1', // 主要功效
-          "manufacturersName": '1', // 生产厂家名字
-          "manufacturersAddress": '1', // 生产厂家地址	
-          "productionCertificate": '1', // 生产许可证
-          "price": '1', // 原价
-          "inventory": '1', // 库存
-          "createId": '1', // 创建人ID
-          "createTime": '1', 
-          "updateTime": '1', 
-          "putawayStatus": 0, // 上下架状态 0表示上架 1 表示下架
-        },
+        }
       ],
-      activeIndex: '1',
+      activeIndex: '0',
+      reqParam: {
+        suppliesName: '',
+        putawayStatus: 0
+      }
     }
   },
   methods: {
     /**
      * @description:  获取商品列表
-     * @param {type} 
      * @return: 
      */
     getGoodsList () {
-      goodsList()
+      let params = this.reqParam
+      // goodsList(param)
+      //   .then(res => {
+      //     console.log(res)
+      //     debugger
+      //   })
+      //   .catch(err => {
+      //     console.log(err)
+      //   })
+      let _this = this
+      axios
+        .get('http://tadmin.yuxinhz.cn/api/product/list', {
+            params
+        })
         .then(res => {
-          console.log(res)
+            console.log(res)
+            _this.tableData = res.data.obj.page.records
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    /**
+     * @description: 查询
+     * @return: 
+     */
+    searchClick () {
+      this.getGoodsList()
     },
     /**
      * 添加分类
@@ -212,13 +220,74 @@ export default {
       this.$router.push({path: '/addGoods'})
     },
     /**
-     * @description: 
+     * @description: 出售中和告罄中的点击事件
      * @param {type} 
      * @return: 
      */
     handleSelect(key, keyPath) {
       this.activeIndex = keyPath[0]
-      console.log(key, keyPath)
+      this.reqParam.putawayStatus =  this.activeIndex
+      this.getGoodsList()
+    },
+    /**
+     * @description: 编辑行
+     * @param {row} 
+     * @return: 
+     */  
+    editRow (row) {
+      this.$store.commit('goodsListRow', row)
+      this.$router.push({path: '/addGoods'})
+    },
+    /**
+     * @description: 商品下架
+     * @param {type} 
+     * @return: 
+     */  
+    soldOutGoods (row) {
+      let _this = this
+       axios
+        .post('http://tadmin.yuxinhz.cn/api/product/soldOut', {'productId': row.productId})
+        .then(res => {
+            console.log(res)
+            _this.getGoodsList()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    /**
+     * @description: 商品上架
+     * @param {type} 
+     * @return: 
+     */  
+    putawayGoods (row) {
+      let _this = this
+       axios
+        .post('http://tadmin.yuxinhz.cn/api/product/putaway', {'productId': row.productId})
+        .then(res => {
+          console.log(res)
+          _this.getGoodsList()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    /**
+     * @description: 删除商品
+     * @param {type} 
+     * @return: 
+     */
+    deleteGoods (row) {
+      let _this = this
+      axios
+        .post('http://tadmin.yuxinhz.cn/api/product/delete', {'productId': row.productId})
+        .then(res => {
+          console.log(res)
+          _this.getGoodsList()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   created () {
@@ -231,5 +300,8 @@ export default {
  .onion-goods-add {
    padding: 10px 0;
    text-align: right;
+   .onion-goods-add_form {
+     float: left;
+   }
  }
 </style>

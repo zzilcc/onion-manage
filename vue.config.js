@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:45:28
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-27 16:40:29
+ * @LastEditTime: 2019-09-28 11:22:40
  * @Description: 
  */
 const path = require('path');
@@ -52,7 +52,7 @@ module.exports = {
           filename: '[path].gz[query]',
           algorithm: 'gzip',
           test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 10240,
+          threshold: 10240000,
           minRatio: 0.8
         }),
       //   new UglifyJsPlugin({
@@ -88,7 +88,6 @@ module.exports = {
     open: true,
     proxy: ''
   },
-  
   // 第三方插件的选项
-  pluginOptions: {}
+  pluginOptions: {},
 }

@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-27 09:45:59
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-27 19:56:11
+ * @LastEditors: 黄紫茜
  */
 import Vue from 'vue'
 import 
@@ -36,7 +36,8 @@ import
     Select,
     Option,
     OptionGroup,
-    Tree
+    Tree,
+    Notification
 } 
 from 'element-ui'
 
@@ -70,3 +71,4 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(OptionGroup)
 Vue.use(Tree)
+Vue.use(Notification)

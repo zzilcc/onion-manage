@@ -2,13 +2,21 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-27 16:32:37
+ * @LastEditTime: 2019-09-28 10:25:05
  * @Description: 
  -->
 <template>
   <div>
     <!-- <el-card class="box-card"> -->
     <section class="onion-goods-add-catagories">
+      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-goods-add-catagories_form" >
+        <el-form-item label="分类名称">
+          <el-input v-model="reqParam.categoryName" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchClick">查询</el-button>
+        </el-form-item>
+      </el-form>
       <el-button type="primary" @click="addGoodsCategories">添加分类</el-button>
     </section>
     <!-- </el-card> -->
@@ -43,7 +51,7 @@
         sortable>
         <template slot-scope="scope">
           <el-button
-            @click.native.prevent="lookChildren(scope)"
+            @click.native.prevent="lookChildren(scope.row)"
             type="text"
             size="small">
             二级等级
@@ -56,16 +64,16 @@
         width="120">
         <template slot-scope="scope">
           <el-button
-            @click.native.prevent="updateRow(scope.$index, tableData)"
+            @click.native.prevent="editGoodsCategories(scope.row)"
             type="text"
             size="small">
             编辑
           </el-button>
           <el-button
-            @click.native.prevent="deleteRow(scope.$index, tableData)"
+            @click.native.prevent="deleteGoodsCategories(scope.row)"
             type="text"
             size="small">
-            移除
+            删除
           </el-button>
         </template>
       </el-table-column>
@@ -78,6 +86,7 @@
   </div>
 </template>
 <script>
+import axios from "axios"
 export default { 
   data () {
     return {
@@ -94,8 +103,11 @@ export default {
           "level": 1, // 分类等级
           "number": 0, // 商品数量
         },
-
-      ]
+      ],
+      // 请求参数
+      reqParam: {
+        categoryName: ''
+      }
     }
   },
   methods: {
@@ -107,12 +119,76 @@ export default {
     },
     /**
      * @description: 查看二级分类
-     * @param {scope: 某一行的数据} 
+     * @param {row: 某一行的数据} 
      * @return: 
      */  
-    lookChildren (scope) {
-      console.log(scope)
+    lookChildren (row) {
+      console.log(row)
+      let _this = this
+      axios
+        .get('http://tadmin.yuxinhz.cn/api/category/list', this.reqParam)
+        .then(res => {
+            console.log(res)
+            _this.tableData = res.data.obj.page.records
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    /**
+     * @description: 获取分类列表
+     * @param {type} 
+     * @return: 
+     */
+    getGoodsCategories () {
+      let _this = this
+      axios
+        .get('http://tadmin.yuxinhz.cn/api/category/list', this.reqParam)
+        .then(res => {
+            console.log(res)
+            _this.tableData = res.data.obj.page.records
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    /**
+     * @description: 查询
+     * @param {type} 
+     * @return: 
+     */  
+    searchClick () {
+      this.getGoodsCategories()
+    },
+    /**
+     * @description: 编辑分类
+     * @param row 
+     * @return: 
+     */
+    editGoodsCategories (row) {
+      this.$store.commit('categoriesListRow', row)
+      this.$router.push({path: '/addGoodsCategories'})
+    },
+    /**
+     * @description: 删除分类
+     * @param row
+     * @return: 
+    */
+    deleteGoodsCategories (row) {
+      let _this = this
+      axios
+        .post('http://tadmin.yuxinhz.cn/api/category/delete', {'categoryId': row.categorytId})
+        .then(res => {
+          console.log(res)
+          _this.getGoodsList()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+  },
+  created () {
+    this.getGoodsCategories()
   }
 }
 </script>
@@ -121,5 +197,8 @@ export default {
  .onion-goods-add-catagories {
    padding-bottom: 10px;
    text-align: right;
+   .onion-goods-add-catagories_form {
+     float: left;
+   }
  }
 </style>
