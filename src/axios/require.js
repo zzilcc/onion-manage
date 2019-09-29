@@ -1,7 +1,14 @@
+/*
+ * @Author: 黄紫茜
+ * @Date: 2019-09-27 14:46:04
+ * @LastEditors: 黄紫茜
+ * @LastEditTime: 2019-09-28 11:33:31
+ * @Description: 
+ */
 import axios from 'axios';
 import Qs from 'qs'
 import { autoMatch, checkStatus } from './utils';
-import { Toast } from 'mint-ui';
+// import { Toast } from 'mint-ui';
 
 const instance = axios.create({
   // baseURL: process.env.BASE_URL
@@ -66,12 +73,12 @@ const request = async function (opt) {
     const res = await instance(options);
     // console.log(res);
     if (!opt.ifHandleError) { // 自定义参数，是否允许全局提示错误信息
-      Toast(res.error || '请求处理失败！')
+      // Toast(res.error || '请求处理失败！')
     }
     return res;
   } catch (err) {
     if (!opt.ifHandleError) { // 自定义参数，是否允许全局提示错误信息
-      Toast(err.msg || '请求处理失败！')
+      // Toast(err.msg || '请求处理失败！')
     }
     return err;
   }

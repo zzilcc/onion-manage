@@ -14,6 +14,9 @@ const getters = {
   },
   categoriesListRow: state => {
     return state.categoriesListRow
+  },
+  categoryTreeData: state => {
+    return state.categoryTreeData
   }
 }
 export default getters

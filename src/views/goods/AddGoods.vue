@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: huangziqian
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-28 11:23:18
+ * @LastEditTime: 2019-09-28 14:20:21
  * @LastEditors: 黄紫茜
  -->
 <template>
@@ -47,22 +47,9 @@
             </el-select>
           </el-form-item>
           <el-form-item label="商品类目">
-            <el-select v-model="ruleForm.brand" placeholder="请选择">
-              <el-option
-                v-for="item in optionsBrand"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-              </el-select>
-            <!-- <SelectTree
-              :props="props"
-              :options="optionData"
-              :value="valueId"
-              :clearable="isClearable"
-              :accordion="isAccordion"
-              @getValue="getValue($event)"
-            /> -->
+            <SelectTree 
+              v-model="selected" :options="categoryTreeData" :props="defaultProps"
+            />
           </el-form-item>
           <el-form-item label="商品展示图">
             <!-- <el-upload
@@ -97,18 +84,24 @@
           <el-input v-model="ruleForm.productId" placeholder="请选择"></el-input>
           </el-form-item>-->
           <el-form-item label="售价">
-            <el-input v-model="ruleForm.price" placeholder="请输入售价"></el-input>
+            <el-input type="number" v-model="ruleForm.price" placeholder="请输入售价"></el-input>
           </el-form-item>
-          <el-form-item label="库存">
-            <el-input v-model="ruleForm.inventory" placeholder="请输入库存"></el-input>
+          <el-form-item  label="库存">
+            <el-input type="number" v-model="ruleForm.inventory" placeholder="请输入库存"></el-input>
           </el-form-item>
           <el-form-item label="规格">
             <el-input v-model="ruleForm.specification" placeholder="请输入规格"></el-input>
           </el-form-item>
         </section>
-        <section v-show="stepStatus === 2">
-          <!-- <tinymce-text id="tinymce" @release="release"></tinymce-text>s -->
-          <div>富文本编辑器</div>
+        <section v-if="stepStatus === 2">
+          <!-- <tinymce-editor  :init="{plugins: 'wordcount image'}" v-model="content"></tinymce-editor> -->
+          <tinymce
+              ref="editor"
+              v-model="msg"
+              @onClick="onClick"
+          />
+          <!-- <button @click="clear">清空内容</button>
+          <button @click="disabled = true">禁用</button> -->
         </section>
         <el-form-item>
            <el-button @click="stepTo"  v-text="stepStatus === 1 ? '下一步' : '上一步' "></el-button>
@@ -119,31 +112,38 @@
   </div>
 </template>
 <script>
-// import SelectTree from "../../components/tree/select-tree.vue";
-// import TinymceText from '../../components/rich_text/TinymceText';
+import SelectTree from "../../components/tree/select-tree.vue";
+import Editor from '@tinymce/tinymce-vue';
+import tinymce from '@/components/tinymce/tinymce.vue'
 import axios from "axios";
 export default {
   components: {
-    // SelectTree,
-    // TinymceText
+    tinymce,
+    SelectTree
+    //  'tinymce-editor': Editor // <- Important part
   },
   computed: {
-    /* 转树形数据 */
-    // optionData() {
-    //   let cloneData = JSON.parse(JSON.stringify(this.list)); // 对源数据深度克隆
-    //   return cloneData.filter(father => {
-    //     // 循环所有项，并添加children属性
-    //     let branchArr = cloneData.filter(child => father.id == child.parentId); // 返回每一项的子级数组
-    //     branchArr.length > 0 ? (father.children = branchArr) : ""; //给父级添加一个children属性，并赋值
-    //     return father.parentId == 0; //返回第一层
-    //   });
-    // },
+    categoryTreeData () {
+      console.log(this.$store.state.categoryTreeData)
+      return this.$store.state.categoryTreeData
+    },
     ruleForm () {
       return this.$store.state.goodsListRow
     }
   },
   data() {
     return {
+      // 默认选中值
+      selected: '617424b0df854884b6025f81c02eeb36',
+      // 数据默认字段
+      defaultProps: {
+        parent: 'parentId',   // 父级唯一标识
+        value: 'id',          // 唯一标识
+        label: 'label',       // 标签显示
+        children: 'children', // 子级
+      },
+      content:'',
+      msg:'',
       fileList: [],
       rules: {
         goodsName: [
@@ -153,41 +153,17 @@ export default {
       imageUrl: "",
       options: [
         {
-          value: "选项1",
+          value: "羽素",
           label: "羽素",
         },
         {
-          value: "选项2",
+          value: "纽崔莱恩",
           label: "纽崔莱恩"
         }
       ],
-      optionsBrand: [
-        {
-           value: "一级分类",
-          label: "一级分类",
-        },
-        {
-           value: "二级分类",
-          label: "二级分类",
-        }
-      ],
-      value: "",
-      isClearable: true, // 可清空（可选）
-      isAccordion: true, // 可收起（可选）
-      valueId: 20, // 初始ID（可选）
-      props: {
-        // 配置项（必选）
-        value: "id",
-        label: "name",
-        children: "children"
-        // disabled:true
-      },
       // 商品分类选项列表（必选）
-      list: [
-        { id: 1, parentId: 0, name: "一级分类", rank: 1 },
-        { id: 2, parentId: 0, name: "二级分类", rank: 1 },
-      ],
-      stepStatus: 1
+      stepStatus: 1,
+      flag: ''// add 为新增商品, edit: 编辑商品
     };
   },
   methods: {
@@ -196,8 +172,17 @@ export default {
      */
     submitForm() {
       let _this = this
+      this.ruleForm.imageText = this.msg
+      let url = ''
+      this.ruleForm.price = parseInt(this.ruleForm.price)
+      this.ruleForm.inventory = parseInt(this.ruleForm.inventory)
+      if (this.flag === 'add') {
+        url = 'http://tadmin.yuxinhz.cn/api/product/add'
+      } else {
+        url = 'http://tadmin.yuxinhz.cn/api/product/update'
+      }
       axios
-        .post('http://tadmin.yuxinhz.cn/api/product/add', this.ruleForm)
+        .post(url, this.ruleForm)
         .then(res => {
           console.log(res)
           _this.$router.push({path: '/goodsList'})
@@ -205,14 +190,15 @@ export default {
         .catch(err => {
           console.log(err)
         })
-      // this.$refs[formName].validate(valid => {
-      //   if (valid) {
-      //     alert("submit!");
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // });
+      axios
+        .post('http://tadmin.yuxinhz.cn/api/product/updatePrice', {productId: this.ruleForm.productId, price: this.ruleForm.price})
+        .then(res => {
+          // console.log(res)
+          _this.$router.push({path: '/goodsList'})
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     /**
      *  重置添加商品的表单
@@ -274,9 +260,19 @@ export default {
         this.stepStatus--
       }
     },
-    release(content){
-      console.log(content);
+    // 鼠标单击的事件
+    onClick (e, editor) {
+        console.log('Element clicked')
+        console.log(e)
+        console.log(editor)
+    },
+    // 清空内容
+    clear () {
+        this.$refs.editor.clear()
     }
+  },
+  mounted () {
+    this.flag = this.$route.query.flag
   }
 };
 </script>

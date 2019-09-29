@@ -21,12 +21,13 @@ const state = {
     imageText: [], // 商品详情里的图文
     categoryId: "", // 分类ID
     brand: "", // 品牌
+    category: '', // 所属分类
     efficacy: "", // 主要功效
     manufacturersName: "", // 生产厂家名字
     manufacturersAddress: "", // 生产厂家地址
     productionCertificate: "", // 生产许可证
-    price: "", // 原价
-    inventory: "", // 库存
+    price: 0, // 原价
+    inventory: 0, // 库存
     createId: "", // 创建人ID
     fileList: []
   },
@@ -35,6 +36,17 @@ const state = {
     "categoryName": "", // 分类名称
     "level": -1, // 分类等级
     "number": 0, // 商品数量
-  }
+    "parentCategoryName": '', // 父级分类名称
+    "parentId": '' // 父级分类id
+  },
+  categoryTreeData:[
+    {
+      categoryId: "",
+      categoryName: "",
+      children: [],
+      level: "",
+      parentId: "0"
+    }
+  ]
 } 
 export default state

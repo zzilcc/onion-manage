@@ -17,7 +17,7 @@
           <el-button type="primary" @click="searchClick">查询</el-button>
         </el-form-item>
       </el-form>
-      <el-button type="primary" @click="addGoodsCategories">添加分类</el-button>
+      <el-button type="primary" @click="addGoodsCategories('', 'addOne')">添加分类</el-button>
     </section>
     <!-- </el-card> -->
     <section class="onion-table">
@@ -46,6 +46,7 @@
         label="商品数量">
       </el-table-column>
       <el-table-column
+        v-if="reqParam.level === '一级分类'"
         prop="createTime"
         label="查看"
         sortable>
@@ -61,10 +62,10 @@
       <el-table-column
         fixed="right"
         label="操作"
-        width="120">
+        width="160">
         <template slot-scope="scope">
           <el-button
-            @click.native.prevent="editGoodsCategories(scope.row)"
+            @click.native.prevent="addGoodsCategories(scope.row, 'edit')"
             type="text"
             size="small">
             编辑
@@ -75,19 +76,28 @@
             size="small">
             删除
           </el-button>
+          <el-button
+            @click.native.prevent="addGoodsCategories(scope.row, 'addSec')"
+            type="text"
+            size="small"
+            v-if="reqParam.level === '一级分类'"
+            >
+            增加分类
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      layout="prev, pager, next"
-      :total="50">
-    </el-pagination>
+    <pages :total="total" :page-size="reqParam.pageSize" @handleSizeChangeSub="handleSizeChangeFun" @handleCurrentChangeSub="handleCurrentChangeFun"></pages>
     </section>
   </div>
 </template>
 <script>
 import axios from "axios"
+import pages from '../../components/pagination'
 export default { 
+  components: {
+    pages
+  },
   data () {
     return {
       tableData: [
@@ -106,16 +116,59 @@ export default {
       ],
       // 请求参数
       reqParam: {
-        categoryName: ''
-      }
+        categoryName: '',
+        level: '一级分类',
+        parentId: '0',
+        pageSize: 2,
+        pageNum: 1
+      },
+      total: 2
     }
   },
   methods: {
+     handleSizeChangeFun(v) {
+      this.reqParam.pageSize = v;
+      this.getGoodsCategories(); //更新列表
+    },
+    handleCurrentChangeFun(v) { //页面点击
+      this.reqParam.pageNum = v; //当前页
+      this.getGoodsCategories()
+    },
     /**
      * 添加分类
      */
-    addGoodsCategories () {
-      this.$router.push({path: '/addGoodsCategories'})
+    addGoodsCategories (row, flag) {
+      let param = {}
+      if(flag === 'addOne') {
+        param = {
+          "id": '',
+          "categoryName": "", // 分类名称
+          "level": '一级分类', // 分类等级
+          "number": 0, // 商品数量
+          "parentCategoryName": '', // 父级分类名称
+          "parentId": '0' // 父级分类id
+        }
+      } else if(flag === 'addSec') {
+        param = {
+          "id": '',
+          "categoryName": "", // 分类名称
+          "level": '二级分类', // 分类等级
+          "number": 0, // 商品数量
+          "parentCategoryName": row.categoryName, // 父级分类名称
+          "parentId": row.id // 父级分类id
+        }
+      } else {
+        param = {
+          "id": row.id,
+          "categoryName": "", // 分类名称
+          "level": row.level, // 分类等级
+          "number": 0, // 商品数量
+          "parentCategoryName": '', // 父级分类名称
+          "parentId": '' // 父级分类id
+        }
+      }
+      this.$store.commit('categoriesListRow', param)
+      this.$router.push({path: '/addGoodsCategories?flag=' + flag})
     },
     /**
      * @description: 查看二级分类
@@ -123,17 +176,10 @@ export default {
      * @return: 
      */  
     lookChildren (row) {
-      console.log(row)
       let _this = this
-      axios
-        .get('http://tadmin.yuxinhz.cn/api/category/list', this.reqParam)
-        .then(res => {
-            console.log(res)
-            _this.tableData = res.data.obj.page.records
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.reqParam.level = '二级分类'
+      this.reqParam.parentId = row.id
+      this.getGoodsCategories()
     },
     /**
      * @description: 获取分类列表
@@ -141,12 +187,14 @@ export default {
      * @return: 
      */
     getGoodsCategories () {
+      let params = this.reqParam
       let _this = this
       axios
-        .get('http://tadmin.yuxinhz.cn/api/category/list', this.reqParam)
+        .get('http://tadmin.yuxinhz.cn/api/category/list', {params})
         .then(res => {
-            console.log(res)
+            // console.log(res)
             _this.tableData = res.data.obj.page.records
+            _this.total = res.data.obj.page.total
         })
         .catch(err => {
           console.log(err)
@@ -161,15 +209,6 @@ export default {
       this.getGoodsCategories()
     },
     /**
-     * @description: 编辑分类
-     * @param row 
-     * @return: 
-     */
-    editGoodsCategories (row) {
-      this.$store.commit('categoriesListRow', row)
-      this.$router.push({path: '/addGoodsCategories'})
-    },
-    /**
      * @description: 删除分类
      * @param row
      * @return: 
@@ -177,10 +216,10 @@ export default {
     deleteGoodsCategories (row) {
       let _this = this
       axios
-        .post('http://tadmin.yuxinhz.cn/api/category/delete', {'categoryId': row.categorytId})
+        .post('http://tadmin.yuxinhz.cn/api/category/delete', {'categoryId': row.id})
         .then(res => {
-          console.log(res)
-          _this.getGoodsList()
+          // console.log(res)
+          _this.getGoodsCategories()
         })
         .catch(err => {
           console.log(err)
@@ -189,7 +228,7 @@ export default {
   },
   created () {
     this.getGoodsCategories()
-  }
+  },
 }
 </script>
 <style lang='less'>

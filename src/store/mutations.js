@@ -18,6 +18,9 @@ const mutations = {
   },
   categoriesListRow(state, object) {
     state.categoriesListRow = object
+  },
+  categoryTreeData(state, object) {
+    state.categoryTreeData = object
   }
 }
 export default mutations

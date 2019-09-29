@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-27 19:56:11
+ * @LastEditTime: 2019-09-28 11:42:47
  * @LastEditors: 黄紫茜
  */
 import Vue from 'vue'
@@ -25,7 +25,7 @@ import
     Dialog,
     Breadcrumb,
     BreadcrumbItem,
-    Message,
+    // Message,
     Loading,
     Dropdown,
     DropdownMenu,
@@ -37,7 +37,8 @@ import
     Option,
     OptionGroup,
     Tree,
-    Notification
+    Popover
+    // Notification
 } 
 from 'element-ui'
 
@@ -58,7 +59,7 @@ Vue.use(Card)
 Vue.use(Dialog)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
-Vue.use(Message)
+// Vue.use(Message)
 Vue.use(Loading)
 Vue.use(Loading)
 Vue.use(Dropdown)
@@ -71,4 +72,5 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(OptionGroup)
 Vue.use(Tree)
-Vue.use(Notification)
+Vue.use(Popover)
+// Vue.use(Notification)

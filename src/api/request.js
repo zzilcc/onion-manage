@@ -2,12 +2,12 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-27 17:47:03
+ * @LastEditTime: 2019-09-28 11:35:08
  * @Description: 
  */
 import axios from "axios";
 import router from "../router/router";
-import {messages} from '../assets/js/common.js'
+// import {messages} from '../assets/js/common.js'
 import store from '../store/store'
 axios.defaults.timeout = 60000;
 axios.defaults.baseURL = "http://tadmin.yuxinhz.cn";
@@ -59,27 +59,27 @@ axios.interceptors.response.use(
             //请求超时
             if (error.message.includes("timeout")) {
                 console.log("超时了");
-                messages("error", "请求超时，请检查互联网连接");
+                // messages("error", "请求超时，请检查互联网连接");
             } else {
                 //断网，可以展示断网组件
                 console.log("断网了");
-                messages("error", "请检查网络是否已连接");
+                // messages("error", "请检查网络是否已连接");
             }
             return;
         }
         const status = error.response.status;
         switch (status) {
             case 500:
-                messages("error", "服务器内部错误");
+                // messages("error", "服务器内部错误");
                 break;
             case 404:
-                messages(
-                    "error",
-                    "未找到远程服务器"
-                );
+                // messages(
+                //     "error",
+                //     "未找到远程服务器"
+                // );
                 break;
             case 401:
-                messages("warning", "用户登陆过期，请重新登陆");
+                // messages("warning", "用户登陆过期，请重新登陆");
                 store.state.commit('COMMIT_TOKEN','')
                 setTimeout(() => {
                     router.replace({
@@ -91,10 +91,10 @@ axios.interceptors.response.use(
                 }, 1000);
                 break;
             case 400:
-                messages("error", "数据异常，详情请咨询聚保服务热线");
+                // messages("error", "数据异常，详情请咨询聚保服务热线");
                 break;
             default:
-                messages("error", error.response.data.message);
+                // messages("error", error.response.data.message);
         }
         return Promise.reject(error);
     }

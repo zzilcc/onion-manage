@@ -97,6 +97,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default { 
   data () {
     return {
@@ -139,7 +140,7 @@ export default {
       user: {
         userName: '黄紫茜'
       },
-      levelList: []
+      levelList: [],
     }
   },
   watch: {
@@ -149,6 +150,7 @@ export default {
   },
   created(){
     this.getBreadcrumb()
+    this.getTreeCategory()
   },
   methods: {
     /**
@@ -202,7 +204,22 @@ export default {
         }
       }
       this.fullscreen = !this.fullscreen;
-    }
+    },
+     /**
+      * 获取分类树形结构
+      */
+     getTreeCategory () {
+       let _this = this
+       axios
+        .get('http://tadmin.yuxinhz.cn/api/category/getTreeCategory', {})
+        .then(res => {
+            // console.log(res)
+            _this.$store.commit('categoryTreeData', res.data.obj.categoryList)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+     }
   }
 }
 </script>
