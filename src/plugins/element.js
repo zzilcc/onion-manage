@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-28 11:42:47
+ * @LastEditTime: 2019-09-30 11:12:04
  * @LastEditors: 黄紫茜
  */
 import Vue from 'vue'
@@ -37,8 +37,13 @@ import
     Option,
     OptionGroup,
     Tree,
-    Popover
+    Popover,
+    DatePicker,
     // Notification
+    Image,
+    InputNumber,
+    RadioGroup,
+    Radio
 } 
 from 'element-ui'
 
@@ -73,4 +78,9 @@ Vue.use(Option)
 Vue.use(OptionGroup)
 Vue.use(Tree)
 Vue.use(Popover)
+Vue.use(DatePicker)
 // Vue.use(Notification)
+Vue.use(Image)
+Vue.use(InputNumber)
+Vue.use(RadioGroup)
+Vue.use(Radio)

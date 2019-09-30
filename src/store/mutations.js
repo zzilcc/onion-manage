@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-28 09:46:56
+ * @LastEditTime: 2019-09-30 10:50:09
  * @Description: 
  */
 // import {
@@ -21,6 +21,12 @@ const mutations = {
   },
   categoryTreeData(state, object) {
     state.categoryTreeData = object
+  },
+  orderDetail(state, object) {
+    state.orderDetail = object
+  },
+  pointsMallListRow(state, object) {
+    state.pointsMallListRow = object
   }
 }
 export default mutations

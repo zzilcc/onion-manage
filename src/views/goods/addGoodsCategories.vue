@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-28 11:40:26
+ * @LastEditTime: 2019-09-29 12:22:22
  * @Description: 
  -->
 <template>
@@ -82,18 +82,12 @@ export default {
         .post(url, this.ruleForm)
         .then(res => {
           // console.log(res)
-          let _this = this
-          axios
-            .get('http://tadmin.yuxinhz.cn/api/category/getTreeCategory', {})
-            .then(res => {
-                // console.log(res)
-                _this.$store.commit('categoryTreeData', res.data.obj.categoryList)
-                _this.$router.push({path: '/goodsCategories'})
-            })
-            .catch(err => {
-              console.log(err)
-            })
-          })
+          _this.$message({
+            message: '添加分类成功',
+            type: 'success'
+          });
+            _this.$router.push({path: '/goodsCategories?pageNum=' + _this.$route.query.pageNum})
+        })
         .catch(err => {
           console.log(err)
         });

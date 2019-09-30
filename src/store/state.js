@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-28 09:47:29
+ * @LastEditTime: 2019-09-30 15:04:50
  * @Description: 
  */
 const state = {
@@ -32,14 +32,16 @@ const state = {
     fileList: []
   },
   categoriesListRow: {
-    "id": 1,
+    "id": '',
     "categoryName": "", // 分类名称
-    "level": -1, // 分类等级
+    "level": '一级分类', // 分类等级
     "number": 0, // 商品数量
     "parentCategoryName": '', // 父级分类名称
-    "parentId": '' // 父级分类id
+    "parentId": '0', // 父级分类id
+    pageSize: 2,
+    pageNum: 1
   },
-  categoryTreeData:[
+  categoryTreeData:[ // 分类树
     {
       categoryId: "",
       categoryName: "",
@@ -47,6 +49,25 @@ const state = {
       level: "",
       parentId: "0"
     }
-  ]
+  ],
+  orderDetail: {
+    orderId: '', // 订单id
+    orderStatus: '' // 订单状态
+  }, 
+  pointsMallListRow: {
+    bannerPicture: "string", //
+    details: null, //
+    id: "25779fc1d2cd493eaba881a1ca0f3fe4", //
+    imageText: "string", //
+    integral: 900, //
+    inventory: null, //
+    limitNumber: 0, //
+    listPicture: "string", //
+    name: "stringzzzzz啧啧啧1", //
+    putawayStatus: 0, //
+    sort: 0, //
+    status: 0, //
+    createTime: ''
+  }
 } 
 export default state

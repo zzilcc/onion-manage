@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-28 10:25:05
+ * @LastEditTime: 2019-09-29 14:13:09
  * @Description: 
  -->
 <template>
@@ -17,7 +17,7 @@
           <el-button type="primary" @click="searchClick">查询</el-button>
         </el-form-item>
       </el-form>
-      <el-button type="primary" @click="addGoodsCategories('', 'addOne')">添加分类</el-button>
+      <el-button type="primary" @click="addGoodsCategories('', 'addOne')">添加一级分类</el-button>
     </section>
     <!-- </el-card> -->
     <section class="onion-table">
@@ -62,7 +62,7 @@
       <el-table-column
         fixed="right"
         label="操作"
-        width="160">
+        width="180">
         <template slot-scope="scope">
           <el-button
             @click.native.prevent="addGoodsCategories(scope.row, 'edit')"
@@ -82,13 +82,24 @@
             size="small"
             v-if="reqParam.level === '一级分类'"
             >
-            增加分类
+            添加二级分类
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <pages :total="total" :page-size="reqParam.pageSize" @handleSizeChangeSub="handleSizeChangeFun" @handleCurrentChangeSub="handleCurrentChangeFun"></pages>
     </section>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialog.dialogVisible"
+      width="30%"
+      >
+      <span v-text="dialog.dialogMsg"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="okClick">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -100,6 +111,12 @@ export default {
   },
   data () {
     return {
+      // 弹框
+      dialog: {
+        dialogVisible: false,
+        dialogMsg: ''
+      },
+      row:{},
       tableData: [
         {
           "id": 1,
@@ -116,9 +133,12 @@ export default {
       ],
       // 请求参数
       reqParam: {
-        categoryName: '',
-        level: '一级分类',
-        parentId: '0',
+        "id": '',
+        "categoryName": "", // 分类名称
+        "level": '一级分类', // 分类等级
+        "number": 0, // 商品数量
+        "parentCategoryName": '', // 父级分类名称
+        "parentId": '0', // 父级分类id
         pageSize: 2,
         pageNum: 1
       },
@@ -132,6 +152,7 @@ export default {
     },
     handleCurrentChangeFun(v) { //页面点击
       this.reqParam.pageNum = v; //当前页
+      this.$route.query.pageNum = v
       this.getGoodsCategories()
     },
     /**
@@ -146,7 +167,9 @@ export default {
           "level": '一级分类', // 分类等级
           "number": 0, // 商品数量
           "parentCategoryName": '', // 父级分类名称
-          "parentId": '0' // 父级分类id
+          "parentId": '0', // 父级分类id
+          "pageSize": 2,
+          "pageNum": this.reqParam.pageNum
         }
       } else if(flag === 'addSec') {
         param = {
@@ -155,7 +178,9 @@ export default {
           "level": '二级分类', // 分类等级
           "number": 0, // 商品数量
           "parentCategoryName": row.categoryName, // 父级分类名称
-          "parentId": row.id // 父级分类id
+          "parentId": row.id, // 父级分类id
+          "pageSize": 2,
+          "pageNum": this.reqParam.pageNum
         }
       } else {
         param = {
@@ -164,11 +189,13 @@ export default {
           "level": row.level, // 分类等级
           "number": 0, // 商品数量
           "parentCategoryName": '', // 父级分类名称
-          "parentId": '' // 父级分类id
+          "parentId": '', // 父级分类id
+          "pageSize": 2,
+          "pageNum": this.reqParam.pageNum
         }
       }
       this.$store.commit('categoriesListRow', param)
-      this.$router.push({path: '/addGoodsCategories?flag=' + flag})
+      this.$router.push({path: '/addGoodsCategories?flag=' + flag + '&pageNum=' + this.reqParam.pageNum})
     },
     /**
      * @description: 查看二级分类
@@ -187,6 +214,9 @@ export default {
      * @return: 
      */
     getGoodsCategories () {
+      if (this.$route.query.pageNum) {
+        this.reqParam.pageNum = parseInt(this.$route.query.pageNum)
+      }
       let params = this.reqParam
       let _this = this
       axios
@@ -214,17 +244,43 @@ export default {
      * @return: 
     */
     deleteGoodsCategories (row) {
+      this.row = row
+      this.dialog.dialogVisible = true
+      this.dialog.dialogMsg = '是否确定删除该分类？'
+    },
+    /**
+     * @description: 调用删除分类接口
+     * @param {type} 
+     * @return: 
+     */
+    post_del () {
       let _this = this
       axios
-        .post('http://tadmin.yuxinhz.cn/api/category/delete', {'categoryId': row.id})
+        .post('http://tadmin.yuxinhz.cn/api/category/delete', {'categoryId': this.row.id})
         .then(res => {
           // console.log(res)
+          _this.$message({
+            message: '删除分类成功',
+            type: 'success'
+          });
           _this.getGoodsCategories()
         })
         .catch(err => {
           console.log(err)
         })
-    }
+    },
+    /**
+     * @description: 弹框点击确定
+     * @param {type} 
+     * @return: 
+     */
+    okClick () {
+      this.post_del()
+      this.dialog.dialogVisible = false
+    },
+    cancel () {
+      this.dialog.dialogVisible = false
+    },
   },
   created () {
     this.getGoodsCategories()

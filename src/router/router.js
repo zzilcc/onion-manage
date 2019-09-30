@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-26 11:15:09
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-30 10:12:09
+ * @LastEditors: 黄紫茜
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -60,6 +60,14 @@ const myRouter = new Router({
               }
             }, 
             {
+              path: '/orderGoods',
+              component: getComponent('goods','orderGoods'),
+              name: 'orderGoods',
+              meta: {
+                title: '商品下单'
+              }
+            }, 
+            {
               path: '/goodsCategories',
               component: getComponent('goods','GoodsCategories'),
               name: 'managoodsCategoriesge',
@@ -75,6 +83,58 @@ const myRouter = new Router({
               name: 'addGoodsCategories',
               meta: {
                 title: '添加商品分类'
+              }
+            }
+          ]
+        },
+        {
+          path: '/marketing',
+          component: getComponent('marketing', 'marketing'),
+          name: 'marketing',
+          meta: {
+            title: '营销'
+          },
+          children: [
+            {
+              path: '/pointsMall',
+              component: getComponent('marketing', 'pointsMall'),
+              name: 'pointsMall',
+              meta: {
+                title: '积分商城'
+              },
+            },
+            {
+              path: '/addPointsMall',
+              component: getComponent('marketing', 'addPointsMall'),
+              name: 'addPointsMall',
+              meta: {
+                title: '添加商品'
+              },
+            },
+          ]
+        },
+        {
+          path: '/order',
+          component: getComponent('order', 'order'),
+          name: 'order',
+          meta: {
+            title: '订单管理'
+          },
+          children: [
+            {
+              path: '/orderList',
+              component: getComponent('order', 'orderList'),
+              name: 'orderList',
+              meta: {
+                title: '订单列表'
+              },
+            },
+            {
+              path: '/orderDetail',
+              component: getComponent('order', 'orderDetail'),
+              name: 'orderDetail',
+              meta: {
+                title: '订单详情'
               }
             }
           ]

@@ -2,12 +2,12 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-28 10:05:04
+ * @LastEditTime: 2019-09-29 19:55:43
  * @Description: 
  -->
 <template>
   <div id="js-manage">
-     <section class="onion-index">
+    <section class="onion-index">
       <!-- 头部信息 -->
       <section class="onion-index-header">
         <div class="onion-index-header-wrap">
@@ -20,8 +20,9 @@
                 <img
                   src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3266090804,66355162&fm=26&gp=0.jpg"
                   class="user-avatar"
-                >
-                {{user.username }}<i class="el-icon-caret-bottom"/>
+                />
+                {{user.username }}
+                <i class="el-icon-caret-bottom" />
               </div>
               <el-dropdown-menu slot="dropdown" class="user-dropdown">
                 <router-link class="inlineBlock" to="/home">
@@ -39,22 +40,18 @@
         </div>
       </section>
       <!-- 中间内容 -->
-      <section  class="onion-index-mian">
+      <section class="onion-index-mian">
         <!-- 左侧导航 -->
-        <section  class="onion-index-mian-left">
+        <section class="onion-index-mian-left">
           <el-row class="tac">
-            <el-col :span="4">   
-              <el-menu
-                class="el-menu-vertical-demo"
-                @open="handleOpen"
-                @close="handleClose"
-                >
-                <router-link to="/home">
+            <el-col :span="4">
+              <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+                <!-- <router-link to="/home">
                   <el-menu-item index="3">
                     <i class="el-icon-document"></i>
                     <span slot="title">首页</span>
                   </el-menu-item>
-                </router-link>
+                </router-link>-->
                 <el-submenu index="2">
                   <template slot="title">
                     <i class="el-icon-s-tools"></i>
@@ -66,30 +63,56 @@
                     </router-link>
                     <!-- <router-link to="addGoods">
                       <el-menu-item index="1-2">添加商品</el-menu-item>
-                    </router-link> -->
+                    </router-link>-->
+                    <router-link to="orderGoods">
+                      <el-menu-item index="1-2">商品下单</el-menu-item>
+                    </router-link>
                     <router-link to="goodsCategories">
                       <el-menu-item index="1-3">分类管理</el-menu-item>
                     </router-link>
                     <!-- <router-link to="addGoodsCategories">
                       <el-menu-item index="1-4">添加商品分类</el-menu-item>
-                    </router-link> -->
+                    </router-link>-->
                   </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="3">
                   <template slot="title">
                     <i class="el-icon-user-solid"></i>
-                    <span>订单</span>
+                    <span>订单管理</span>
                   </template>
-                </el-submenu>      
+                  <el-menu-item-group>
+                    <router-link to="orderList">
+                      <el-menu-item index="1-1">订单管理</el-menu-item>
+                    </router-link>
+                  </el-menu-item-group>
+                </el-submenu>
+                <el-submenu index="4">
+                  <template slot="title">
+                    <i class="el-icon-user-solid"></i>
+                    <span>营销</span>
+                  </template>
+                  <el-menu-item-group>
+                    <router-link to="pointsMall">
+                      <el-menu-item index="1-1">积分商城</el-menu-item>
+                    </router-link>
+                  </el-menu-item-group>
+                </el-submenu>
               </el-menu>
             </el-col>
           </el-row>
         </section>
-        <section  class="onion-index-mian-content">
+        <section class="onion-index-mian-content">
           <!-- <button @click="toggleClick" v-text="isCollapse? '展开': '收缩'"></button> -->
-          <el-breadcrumb class="breadcrumb-container onion-breadcrumb" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item v-for="item in levelList" :key="item.path" :to="item.path">{{item.meta.title}}</el-breadcrumb-item>
-            </el-breadcrumb>
+          <el-breadcrumb
+            class="breadcrumb-container onion-breadcrumb"
+            separator-class="el-icon-arrow-right"
+          >
+            <el-breadcrumb-item
+              v-for="item in levelList"
+              :key="item.path"
+              :to="item.path"
+            >{{item.meta.title}}</el-breadcrumb-item>
+          </el-breadcrumb>
           <router-view></router-view>
         </section>
       </section>
@@ -98,81 +121,81 @@
 </template>
 <script>
 import axios from "axios";
-export default { 
-  data () {
+export default {
+  data() {
     return {
       leftNav: [
         {
-          name: '首页',
-          index: '1',
+          name: "首页",
+          index: "1",
           children: []
         },
         {
-          name: '商品',
-          index: '2',
+          name: "商品",
+          index: "2",
           children: [
             {
-              name: '商品列表',
-              index: '1-1',
-              link: '/goods/goodsList',
+              name: "商品列表",
+              index: "1-1",
+              link: "/goods/goodsList",
               children: []
             },
             {
-              name: '添加商品',
-              index: '1-2',
-              link: '/goods/addGoods',
+              name: "添加商品",
+              index: "1-2",
+              link: "/goods/addGoods",
               children: []
             },
             {
-              name: '商品分类',
-              index: '1-3',
+              name: "商品分类",
+              index: "1-3",
               children: []
             }
           ]
         },
         {
-          name: '订单',
-          index: '3',
+          name: "订单",
+          index: "3",
           children: []
         }
       ],
       isCollapse: false,
       user: {
-        userName: '黄紫茜'
+        userName: "黄紫茜"
       },
-      levelList: [],
-    }
+      levelList: []
+    };
   },
   watch: {
     $route() {
-      this.getBreadcrumb()
+      this.getBreadcrumb();
     }
   },
-  created(){
-    this.getBreadcrumb()
-    this.getTreeCategory()
+  created() {
+    this.getBreadcrumb();
+    // this.getTreeCategory()
   },
   methods: {
     /**
      * 获取导航路由
      */
     getBreadcrumb() {
-      this.levelList = this.$route.matched.filter(item => item.name)
+      this.levelList = this.$route.matched.filter(item => item.name);
     },
-    handleOpen () {
-      this.isCollapse = false
+    handleOpen() {
+      this.isCollapse = false;
     },
-    handleClose () {
-      this.isCollapse = true
+    handleClose() {
+      this.isCollapse = true;
     },
-    toggleClick () {
-      this.isCollapse = !this.isCollapse
+    toggleClick() {
+      this.isCollapse = !this.isCollapse;
     },
     /**
      * 个人信息页面点击
      */
-    userInfoClick () {
-      this.$router.push({ path:'/about'})
+    userInfoClick() {
+      this.$router.push({ path: "/about" });
     },
     // 用户名下拉菜单选择事件
     logout() {
@@ -205,29 +228,29 @@ export default {
       }
       this.fullscreen = !this.fullscreen;
     },
-     /**
-      * 获取分类树形结构
-      */
-     getTreeCategory () {
-       let _this = this
-       axios
-        .get('http://tadmin.yuxinhz.cn/api/category/getTreeCategory', {})
+    /**
+     * 获取分类树形结构
+     */
+    getTreeCategory() {
+      let _this = this;
+      axios
+        .get("http://tadmin.yuxinhz.cn/api/category/getTreeCategory", {})
         .then(res => {
-            // console.log(res)
-            _this.$store.commit('categoryTreeData', res.data.obj.categoryList)
+          // console.log(res)
+          _this.$store.commit("categoryTreeData", res.data.obj.categoryList);
         })
         .catch(err => {
-          console.log(err)
-        })
-     }
+          console.log(err);
+        });
+    }
   }
-}
+};
 </script>
 <style lang="less">
 #js-manage {
   height: 100%;
   width: 100%;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -245,7 +268,7 @@ export default {
     left: 0;
     height: 60px;
     width: 100%;
-    background-color:#ff935c;
+    background-color: #ff935c;
     .onion-index-header-wrap {
       height: 100%;
       width: 100%;
@@ -289,7 +312,6 @@ export default {
       padding: 20px 20px 20px 200px;
       overflow: auto;
     }
-
   }
 }
 .onion-login-section {
