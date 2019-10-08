@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-29 15:32:44
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-30 14:09:21
+ * @LastEditTime: 2019-10-08 10:38:52
  * @Description: 
  -->
 <template>
@@ -81,28 +81,34 @@
         class="demo-form-inline onion-orderGoods-left-add_form"
         label-width="100px"
       >
-        <el-form-item label="姓名+手机号" >
-          <el-input v-model="reqParam.suppliesName" placeholder="请输入"></el-input>
+        <el-form-item label="姓名" >
+          <el-input v-model="userInfo.customerName" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" >
+          <el-input v-model="userInfo.customerPhoneNum" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="会员折扣" >
-          <el-input v-model="reqParam.suppliesName" placeholder="请输入"></el-input>
+          <el-input v-model="userInfo.memDiscount"  disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item label="参与活动" >
-          <el-input v-model="reqParam.suppliesName" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="优惠" >
-          <el-input v-model="reqParam.suppliesName" placeholder="请输入优惠"></el-input>
+          <el-input v-model="userInfo.favorPrice" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="运费">
-          <el-input v-model="reqParam.suppliesName" placeholder="请输入运费"></el-input>
+          <el-input v-model="userInfo.distribFee" placeholder="请输入运费"></el-input>
         </el-form-item>
       </el-form>
       <p>合计: 99元</p>
       <el-button type="primary" @click="submitOrder">提交订单</el-button>
     </section>
+    <!-- <el-dialog title="提示" :visible.sync="dialog.dialogVisible" width="30%">
+      <span v-text="dialog.dialogMsg"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="okClick">确 定</el-button>
+      </span>
+    </el-dialog> -->
   </div>
 </template>
-
 <script>
 import axios from "axios";
 import SelectTree from "../../components/tree/select-tree.vue";
@@ -114,6 +120,11 @@ export default {
   },
   data() {
     return {
+       // 弹框
+      dialog: {
+        dialogVisible: false,
+        dialogMsg: ""
+      },
       reqParam: {
         suppliesName: "",
         categoryId: "",
@@ -156,14 +167,24 @@ export default {
         }
       ],
       orderGoodsList: [
-        // // 商品下单列表
-        // {
-        //   suppliesName: "",
-        //   unit: "",
-        //   price: "",
-        //   suppliesNum: 1
-        // }
-      ]
+      ],
+      orderGoodsReq: {
+        distribFee:'0', // 运费	
+        favorPrice: "0.1", // 减免价格	
+        memDiscount: "0.8", //	会员折扣价格	
+        payMoney: "1000", // 支付金额(合计)	
+        payPrescription: "", //	支付时效	
+        payReminders: "", // 提醒语	
+        userId: "admin",	// 用户的id	
+        userName: "zz"
+      },
+      userInfo: {
+        customerName: '', // 客户名字
+        customerPhoneNum: '' , // 客户手机号
+        memDiscount: '', // 会员折扣
+        favorPrice: '', // 优惠活动
+        distribFee: '' // 运费
+      }
     };
   },
   computed: {
@@ -250,6 +271,19 @@ export default {
 
     submitOrder() {
       // this.orderGoodsList
+      let _this = this
+      this.orderGoodsReq.list = this.orderGoodsList
+      axios
+        .post("http://192.168.1.161:8102/placeOrder", this.orderGoodsReq)
+        .then(res => {
+           _this.$message({
+            message: "下单成功",
+            type: "success"
+          });
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     /**
      * @description: 商品数量增减
@@ -264,7 +298,15 @@ export default {
         });
         // this.$refs.multipleTable.toggleRowSelection(this.tableData[index])
       }
-    }
+    },
+    /**
+     * @description: 弹框点击确定
+     * @param {type}
+     * @return:
+     */
+    okClick() {
+      this.dialog.dialogVisible = false;
+    },
   },
   created() {
     this.getTreeCategory();

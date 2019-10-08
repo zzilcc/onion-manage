@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-29 19:55:43
+ * @LastEditTime: 2019-10-08 09:48:02
  * @Description: 
  -->
 <template>
@@ -25,9 +25,9 @@
                 <i class="el-icon-caret-bottom" />
               </div>
               <el-dropdown-menu slot="dropdown" class="user-dropdown">
-                <router-link class="inlineBlock" to="/home">
+                <!-- <router-link class="inlineBlock" to="/home">
                   <el-dropdown-item>首页</el-dropdown-item>
-                </router-link>
+                </router-link> -->
                 <router-link class="inlineBlock" to="/about">
                   <el-dropdown-item>个人信息</el-dropdown-item>
                 </router-link>

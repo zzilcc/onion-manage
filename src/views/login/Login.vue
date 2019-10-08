@@ -1,3 +1,10 @@
+<!--
+ * @Author: 黄紫茜
+ * @Date: 2019-09-27 14:46:04
+ * @LastEditors: 黄紫茜
+ * @LastEditTime: 2019-10-08 09:50:27
+ * @Description: 
+ -->
 <template>
   <div class="onion-login">
     <div class="onion-login-content">
@@ -32,7 +39,7 @@ export default {
     onSubmit () {
       if (this.form.name === 'admin' && this.form.password === '123'){
         // this.$store.commit('setLoginStatus', true)
-        this.$router.push({path:'/home'})
+        this.$router.push({path:'/goodsList'})
       } 
     }
   }
