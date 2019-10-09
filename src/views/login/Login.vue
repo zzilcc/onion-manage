@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-08 09:50:27
+ * @LastEditTime: 2019-10-09 15:03:53
  * @Description: 
  -->
 <template>
@@ -12,7 +12,7 @@
         <p class="onion-login-content-title">洋葱电商后台管理系统</p>
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label-width="45px" label="账号">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.username"></el-input>
           </el-form-item>
           <el-form-item label-width="45px" label="密码">
             <el-input type="password" v-model="form.password"></el-input>
@@ -26,21 +26,43 @@
   </div>
 </template>
 <script>
+import {loginAxios } from "@/api/api.js"; 
 export default { 
   data () {
     return {
       form: {
-          name: '',
+          username: '',
           password: ''
       }
     }
   },
   methods: {
     onSubmit () {
-      if (this.form.name === 'admin' && this.form.password === '123'){
-        // this.$store.commit('setLoginStatus', true)
-        this.$router.push({path:'/goodsList'})
-      } 
+      let _this = this
+      this.$store.dispatch('toLogin', {
+        username: this.form.username,
+        password: this.form.password
+      }).then(() => {
+         this.$router.push({path:'/goodsList'})
+      }).catch(err => {
+        console.log(err)
+        _this.$message({
+          message: "账号或者密码有误，请重新输入！",
+          type: "error",
+          center: true
+        });
+      })
+      // loginAxios(this.form) 
+      //   .then(res => {
+      //     this.$router.push({path:'/goodsList'})
+      //   })
+      //   .catch(err => {
+      //     _this.$message({
+      //       message: "账号或者密码有误，请重新输入！",
+      //       type: "error",
+      //       center: true
+      //     });
+      //   })
     }
   }
 }

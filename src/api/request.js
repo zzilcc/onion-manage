@@ -2,32 +2,35 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-28 11:35:08
+ * @LastEditTime: 2019-10-09 19:46:35
  * @Description: 
  */
 import axios from "axios";
 import router from "../router/router";
 // import {messages} from '../assets/js/common.js'
 import store from '../store/store'
-axios.defaults.timeout = 60000;
+axios.defaults.timeout = 6000000;
 axios.defaults.baseURL = "http://tadmin.yuxinhz.cn";
+// axios.defaults.baseURL = "http://192.168.1.197:8102";
 axios.defaults.headers.post["Content-Type"] =
-    "application/x-www-form-urlencoded;charset=UTF-8";
+  "application/x-www-form-urlencoded;charset=UTF-8";
 let loading = null;
+
 /*
  *请求前拦截
  *用于处理需要请求前的操作
  */
 axios.interceptors.request.use(
-    config => {
-        if (store.state.token) {
-            // config.headers["Authorization"] = "Bearer " + store.state.token;
-        }
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
+  config => {
+    if (store.state.token) {
+      config.headers["Authorization"] = "Bearer " + store.state.token;
+      config.headers["Token"] = store.state.token;
     }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
 );
 /*
  *请求响应拦截
@@ -35,103 +38,66 @@ axios.interceptors.request.use(
  */
 axios.interceptors.response.use(
     response => {
-        return new Promise((resolve, reject) => {
-            //请求成功后关闭加载框
-            if (loading) {
-                // loading.close();
-            }
-            const res = response.data;
-            if (res.err_code === 0) {
-                resolve(res)
-            } else{
-                reject(res)
-            }
-        })
-    },
-    error => {
-        console.log(error)
+      return new Promise((resolve, reject) => {
         //请求成功后关闭加载框
         if (loading) {
-            // loading.close();
+          // loading.close();
         }
-        //断网处理或者请求超时
-        if (!error.response) {
-            //请求超时
-            if (error.message.includes("timeout")) {
-                console.log("超时了");
-                // messages("error", "请求超时，请检查互联网连接");
-            } else {
-                //断网，可以展示断网组件
-                console.log("断网了");
-                // messages("error", "请检查网络是否已连接");
-            }
-            return;
+        const res = response.data;
+        if (res.code === 200 && res.message === "success") {
+          resolve(res)
+        } else {
+          reject(res)
         }
-        const status = error.response.status;
-        switch (status) {
-            case 500:
-                // messages("error", "服务器内部错误");
-                break;
-            case 404:
-                // messages(
-                //     "error",
-                //     "未找到远程服务器"
-                // );
-                break;
-            case 401:
-                // messages("warning", "用户登陆过期，请重新登陆");
-                store.state.commit('COMMIT_TOKEN','')
-                setTimeout(() => {
-                    router.replace({
-                        path: "/login",
-                        query: {
-                            redirect: router.currentRoute.fullPath
-                        }
-                    });
-                }, 1000);
-                break;
-            case 400:
-                // messages("error", "数据异常，详情请咨询聚保服务热线");
-                break;
+      })
+      .catch(error => {
+          console.log(error)
+          const status = error.code;
+          switch (status) {
+            case '401':
+              // messages("warning", "用户登陆过期，请重新登陆");
+              router.replace({
+                path: "/login",
+              });
+              break;
             default:
-                // messages("error", error.response.data.message);
-        }
-        return Promise.reject(error);
-    }
-);
-/*
- *get方法，对应get请求
- *@param {String} url [请求的url地址]
- *@param {Object} params [请求时候携带的参数]
- */
-export function get(url, params) {
+              break;
+          }
+      })
+})
+  /*
+   *get方法，对应get请求
+   *@param {String} url [请求的url地址]
+   *@param {Object} params [请求时候携带的参数]
+   */
+  export function get(url, params) {
     return new Promise((resolve, reject) => {
-        axios
-            .get(url, {
-                params
-            })
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => {
-                reject(err);
-            });
+      axios
+        .get(url, {
+          params
+        })
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
-}
+  }
 /*
  *post方法，对应post请求
  *@param {String} url [请求的url地址]
  *@param {Object} params [请求时候携带的参数]
  */
 export function post(url, params) {
-    return new Promise((resolve, reject) => {
-        axios
-            .post(url, params)
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => {
-                reject(err);
-            });
-    });
+  return new Promise((resolve, reject) => {
+    axios
+      .post(url, params)
+      .then(res => {
+        resolve(res);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
 }

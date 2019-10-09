@@ -2,13 +2,13 @@
  * @Description: 商品列表
  * @Author: 黄紫茜
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-30 15:56:00
+ * @LastEditTime: 2019-10-09 19:08:45
  * @LastEditors: 黄紫茜
  -->
 <template>
   <div>
     <section class="onion-order-add">
-      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-order-add_form">
+      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-order-add_form" label-width="120px">
         <el-form-item label="下单时间">
           <el-date-picker
             v-model="date"

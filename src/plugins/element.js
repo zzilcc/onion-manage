@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-30 11:12:04
+ * @LastEditTime: 2019-10-09 19:54:39
  * @LastEditors: 黄紫茜
  */
 import Vue from 'vue'
@@ -43,7 +43,9 @@ import
     Image,
     InputNumber,
     RadioGroup,
-    Radio
+    Radio,
+    Checkbox,
+    CheckboxGroup
 } 
 from 'element-ui'
 
@@ -84,3 +86,5 @@ Vue.use(Image)
 Vue.use(InputNumber)
 Vue.use(RadioGroup)
 Vue.use(Radio)
+Vue.use(CheckboxGroup)
+Vue.use(Checkbox)

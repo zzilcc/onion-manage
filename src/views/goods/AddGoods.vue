@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: huangziqian
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-30 18:11:30
+ * @LastEditTime: 2019-10-09 19:44:27
  * @LastEditors: 黄紫茜
  -->
 <template>
@@ -12,7 +12,7 @@
         <el-step title="1.编辑基本信息" @click.native="step_click(1)"></el-step>
         <el-step title="2.编辑商品详情" @click.native="step_click(2)"></el-step>
       </el-steps>
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-form-inline">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-form-inline" label-width="100px">
         <section v-show="stepStatus === 1">
           <p>
             <span>基本信息</span>
@@ -100,6 +100,7 @@
 import SelectTree from "../../components/tree/select-tree.vue";
 import Editor from "@tinymce/tinymce-vue";
 import tinymce from "@/components/tinymce/tinymce.vue";
+import { updateGoodsAxios, updatePriceGoodsAxios, getTreeCategoryAxios, fileUploadAxios } from "@/api/api.js"; // 获取商品列表
 import axios from "axios";
 export default {
   components: {

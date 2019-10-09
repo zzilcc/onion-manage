@@ -2,14 +2,14 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-29 19:53:52
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-30 11:07:47
+ * @LastEditTime: 2019-10-09 19:08:17
  * @Description: 
  -->
 <template>
    <div>
     <!-- <el-card class="box-card"> -->
     <section class="onion-pointsMall-add">
-      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-pointsMall-add_form">
+      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-pointsMall-add_form" label-width="120px">
         <el-form-item label="商品名称">
           <el-input v-model="reqParam.suppliesName" placeholder="请输入"></el-input>
         </el-form-item>

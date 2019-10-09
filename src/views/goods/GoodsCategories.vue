@@ -2,14 +2,14 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-29 14:13:09
+ * @LastEditTime: 2019-10-09 19:07:29
  * @Description: 
  -->
 <template>
   <div>
     <!-- <el-card class="box-card"> -->
     <section class="onion-goods-add-catagories">
-      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-goods-add-catagories_form" >
+      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-goods-add-catagories_form" label-width="120px">
         <el-form-item label="分类名称">
           <el-input v-model="reqParam.categoryName" placeholder="请输入"></el-input>
         </el-form-item>

@@ -2,11 +2,13 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-30 15:04:50
+ * @LastEditTime: 2019-10-09 17:45:39
  * @Description: 
  */
 const state = {
-  token: '111',
+  token: window.localStorage.getItem('token'),
+  userInfo: {},
+  loginStatus: false,
   roles: [], // 用户角色
   goodsListRow: {
     productId: "", //  商品ID
@@ -68,6 +70,15 @@ const state = {
     sort: 0, //
     status: 0, //
     createTime: ''
+  },
+  memberLevelRow: {
+    levelNum: "",
+    levelName: "",
+    rechargeAmount: "",
+    discount: "",
+    integralRatio: "",
+    upgradeAmount: "",
+    description: ""
   }
 } 
 export default state

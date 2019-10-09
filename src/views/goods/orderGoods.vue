@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-29 15:32:44
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-08 10:38:52
+ * @LastEditTime: 2019-10-09 19:07:57
  * @Description: 
  -->
 <template>
@@ -13,6 +13,7 @@
         :inline="true"
         :model="reqParam"
         class="demo-form-inline onion-orderGoods-left-add_form"
+        label-width="120px"
       >
         <el-form-item label="商品分类">
           <SelectTree

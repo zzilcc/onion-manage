@@ -2,13 +2,13 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-29 12:22:22
+ * @LastEditTime: 2019-10-09 19:07:01
  * @Description: 
  -->
 <template>
   <div>
     <el-card class="box-card">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-form-inline">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-form-inline" label-width="120px"> 
         <el-form-item label="商品分类名称" prop="name">
           <el-input v-model="ruleForm.categoryName" placeholder="商品分类名称"></el-input>
         </el-form-item>

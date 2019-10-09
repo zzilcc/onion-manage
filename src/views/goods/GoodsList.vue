@@ -2,7 +2,7 @@
  * @Description: 商品列表
  * @Author: 黄紫茜
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-29 16:08:12
+ * @LastEditTime: 2019-10-08 17:51:38
  * @LastEditors: 黄紫茜
  -->
 <template>
@@ -18,7 +18,7 @@
     </el-menu>
     <!-- <el-card class="box-card"> -->
     <section class="onion-goods-add">
-      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-goods-add_form">
+      <el-form :inline="true" :model="reqParam" class="demo-form-inline onion-goods-add_form" label-width="120px">
         <el-form-item label="商品名称">
           <el-input v-model="reqParam.suppliesName" placeholder="请输入"></el-input>
         </el-form-item>
@@ -44,7 +44,7 @@
         <el-table-column prop="goodsDescription" label="总销量"></el-table-column>
         <el-table-column prop="createTime" label="商品创建时间" sortable></el-table-column>
         <el-table-column prop="status" label="商品状态" sortable></el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column  label="操作" width="120">
           <template slot-scope="scope">
             <el-button
               @click.native.prevent="addGoods(scope.row, 'edit')"
@@ -88,8 +88,7 @@
   </div>
 </template>
 <script>
-// import { goodsList } from "@/api/api.js";
-import axios from "axios";
+import { goodsListAxios, deleteGoodsAxios, putawayGoodsAxios, soldOutGoodsAxios } from "@/api/api.js"; 
 import pages from "../../components/pagination";
 export default {
   components: {
@@ -151,15 +150,7 @@ export default {
      * @return:
      */
     okClick() {
-      let url = "";
-      if (this.method === "删除") {
-        url = "http://tadmin.yuxinhz.cn/api/product/delete";
-      } else if (this.method === "上架") {
-        url = "http://tadmin.yuxinhz.cn/api/product/putaway";
-      } else if (this.method === "下架") {
-        url = "http://tadmin.yuxinhz.cn/api/product/soldOut";
-      }
-      this.post_del_putaway_soldOut_Goods(url);
+      this.post_del_putaway_soldOut_Goods();
       this.dialog.dialogVisible = false;
     },
     handleSizeChangeFun(v) {
@@ -182,19 +173,15 @@ export default {
       }
       let params = this.reqParam;
       let _this = this;
-      axios
-        .get("http://tadmin.yuxinhz.cn/api/product/list", {
-          params
-        })
+      goodsListAxios(params)
         .then(res => {
-          // console.log(res)
-          _this.tableData = res.data.obj.page.records;
-          _this.total = res.data.obj.page.total;
-          _this.reqParam.pageSize = res.data.obj.page.size;
+          _this.tableData = res.obj.page.records;
+          _this.total = res.obj.page.total;
+          _this.reqParam.pageSize = res.obj.page.size;
         })
         .catch(err => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
     /**
      * @description: 查询
@@ -265,21 +252,48 @@ export default {
      * @param {type}
      * @return:
      */
-    post_del_putaway_soldOut_Goods(url) {
+    post_del_putaway_soldOut_Goods() {
       let _this = this;
-      axios
-        .post(url, { productId: this.row.productId })
-        .then(res => {
-          // console.log(res)
-          _this.$message({
-            message: _this.method + "商品成功",
-            type: "success"
-          });
-          _this.getGoodsList();
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (this.method === "删除") {
+        deleteGoodsAxios({ productId: this.row.productId })
+          .then(res => {
+            // console.log(res)
+            _this.$message({
+              message: _this.method + "商品成功",
+              type: "success"
+            });
+            _this.getGoodsList();
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      } else if (this.method === "上架") {
+        putawayGoodsAxios({ productId: this.row.productId })
+          .then(res => {
+            // console.log(res)
+            _this.$message({
+              message: _this.method + "商品成功",
+              type: "success"
+            });
+            _this.getGoodsList();
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      } else if (this.method === "下架") {
+        soldOutGoodsAxios({ productId: this.row.productId })
+          .then(res => {
+            // console.log(res)
+            _this.$message({
+              message: _this.method + "商品成功",
+              type: "success"
+            });
+            _this.getGoodsList();
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }
     }
   },
   created() {

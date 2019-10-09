@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-08 09:48:02
+ * @LastEditTime: 2019-10-08 17:10:03
  * @Description: 
  -->
 <template>
@@ -46,13 +46,18 @@
           <el-row class="tac">
             <el-col :span="4">
               <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
-                <!-- <router-link to="/home">
-                  <el-menu-item index="3">
-                    <i class="el-icon-document"></i>
-                    <span slot="title">首页</span>
-                  </el-menu-item>
-                </router-link>-->
-                <el-submenu index="2">
+                <el-submenu v-for="(item) in leftNav" :key="item.id" :index="item.index">
+                  <template slot="title">
+                    <i :class="item.class"></i>
+                    <span v-text="item.name"></span>
+                  </template>
+                  <el-menu-item-group v-for="(item2, index2) in item.children" :key="index2">
+                    <router-link :to="item2.url">
+                      <el-menu-item :index="item2.index" v-text="item2.name"></el-menu-item>
+                    </router-link>
+                  </el-menu-item-group>
+                </el-submenu>
+                <!-- <el-submenu index="1">
                   <template slot="title">
                     <i class="el-icon-s-tools"></i>
                     <span>商品</span>
@@ -61,21 +66,15 @@
                     <router-link to="goodsList">
                       <el-menu-item index="1-1">商品管理</el-menu-item>
                     </router-link>
-                    <!-- <router-link to="addGoods">
-                      <el-menu-item index="1-2">添加商品</el-menu-item>
-                    </router-link>-->
                     <router-link to="orderGoods">
                       <el-menu-item index="1-2">商品下单</el-menu-item>
                     </router-link>
                     <router-link to="goodsCategories">
                       <el-menu-item index="1-3">分类管理</el-menu-item>
                     </router-link>
-                    <!-- <router-link to="addGoodsCategories">
-                      <el-menu-item index="1-4">添加商品分类</el-menu-item>
-                    </router-link>-->
                   </el-menu-item-group>
                 </el-submenu>
-                <el-submenu index="3">
+                <el-submenu index="2">
                   <template slot="title">
                     <i class="el-icon-user-solid"></i>
                     <span>订单管理</span>
@@ -86,7 +85,7 @@
                     </router-link>
                   </el-menu-item-group>
                 </el-submenu>
-                <el-submenu index="4">
+                <el-submenu index="3">
                   <template slot="title">
                     <i class="el-icon-user-solid"></i>
                     <span>营销</span>
@@ -96,7 +95,7 @@
                       <el-menu-item index="1-1">积分商城</el-menu-item>
                     </router-link>
                   </el-menu-item-group>
-                </el-submenu>
+                </el-submenu> -->
               </el-menu>
             </el-col>
           </el-row>
@@ -126,38 +125,137 @@ export default {
     return {
       leftNav: [
         {
-          name: "首页",
-          index: "1",
-          children: []
-        },
-        {
           name: "商品",
-          index: "2",
+          id: "goods",
+          index: "1",
+          class: "",
           children: [
             {
-              name: "商品列表",
+              name: "商品管理",
               index: "1-1",
-              link: "/goods/goodsList",
+              url: "/goodsList",
               children: []
             },
             {
-              name: "添加商品",
+              name: "商品下单",
               index: "1-2",
-              link: "/goods/addGoods",
+              url: "/orderGoods",
               children: []
             },
             {
-              name: "商品分类",
+              name: "分类管理",
               index: "1-3",
+              children: [],
+              url: "/goodsCategories",
+            }
+          ]
+        },
+        {
+          name: "订单管理",
+          id: "order",
+          index: "2",
+          class: "",
+          children: [
+            {
+              name: "订单管理",
+              index: "1-1",
+              url: "/orderList",
               children: []
             }
           ]
         },
         {
-          name: "订单",
+          name: "会员",
+          id: "member",
           index: "3",
-          children: []
-        }
+          class: "",
+          children: [
+            {
+              name: "会员管理",
+              index: "1-1",
+              url: "/memManage",
+              children: []
+            },
+            {
+              name: "会员等级",
+              index: "1-2",
+              url: "/memberLevel",
+              children: []
+            },
+          ]
+        },
+        {
+          name: "财务",
+          id: "financial",
+          index: "4",
+          class: "",
+          children: [
+            {
+              name: "充值",
+              index: "1-1",
+              url: "/rechargeFin",
+              children: []
+            },
+            {
+              name: "积分",
+              index: "1-2",
+              url: "/pointsFin",
+              children: []
+            },
+            {
+              name: "余额",
+              index: "1-3",
+              url: "/balanceFin",
+              children: []
+            },
+            {
+              name: "交易流水",
+              index: "1-4",
+              url: "/dealPipelining",
+              children: []
+            },
+          ]
+        },
+        {
+          name: "营销",
+          id: "marketing",
+          index: "5",
+          class: "",
+          children: [
+            {
+              name: "积分商城",
+              index: "1-1",
+              url: "/pointsMall",
+              children: []
+            }
+          ]
+        },
+        {
+          name: "设置",
+          id: "setting",
+          index: "6",
+          class: "",
+          children: [
+            {
+              name: "员工管理",
+              index: "1-1",
+              url: "/employeeManagement",
+              children: []
+            },
+            {
+              name: "职务管理",
+              index: "1-2",
+              url: "/jobManagement",
+              children: []
+            },
+            {
+              name: "活动说明",
+              index: "1-3",
+              url: "/eventsDescription",
+              children: []
+            }
+          ]
+        },
       ],
       isCollapse: false,
       user: {
@@ -282,7 +380,7 @@ export default {
         text-align: left;
       }
       .onion-header-left span {
-        font-size: 20px;
+        font-size: 16px;
       }
       .onion-header-right {
         width: 60%;

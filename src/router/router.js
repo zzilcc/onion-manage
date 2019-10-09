@@ -2,14 +2,15 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-09-30 10:12:09
+ * @LastEditTime: 2019-10-09 17:35:12
  * @LastEditors: 黄紫茜
  */
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store/store';
-import NProgress from 'nprogress' //进度条
+// import NProgress from 'nprogress' //进度条
 import 'nprogress/nprogress.css'
+import { networkInterfaces } from 'os';
 
 
 Vue.use(Router)
@@ -32,7 +33,8 @@ const myRouter = new Router({
       component: getComponent('home','Home'),
       name: 'home',
       meta: {
-        title: '首页'
+        title: '首页',
+        requiresAuth: true
       },
       children: [
         {
@@ -48,7 +50,8 @@ const myRouter = new Router({
               component: getComponent('goods','GoodsList'),
               name: 'goodsList',
               meta: {
-                title: '商品列表'
+                title: '商品列表',
+                requiresAuth: true
               }
             },
             {
@@ -64,7 +67,8 @@ const myRouter = new Router({
               component: getComponent('goods','orderGoods'),
               name: 'orderGoods',
               meta: {
-                title: '商品下单'
+                title: '商品下单',
+                requiresAuth: true
               }
             }, 
             {
@@ -72,7 +76,8 @@ const myRouter = new Router({
               component: getComponent('goods','GoodsCategories'),
               name: 'managoodsCategoriesge',
               meta: {
-                title: '商品分类'
+                title: '商品分类',
+                requiresAuth: true
               },
               children: [
               ]
@@ -88,11 +93,117 @@ const myRouter = new Router({
           ]
         },
         {
+          path: '/order',
+          component: getComponent('order', 'order'),
+          name: 'order',
+          meta: {
+            title: '订单管理'
+          },
+          children: [
+            {
+              path: '/orderList',
+              component: getComponent('order', 'orderList'),
+              name: 'orderList',
+              meta: {
+                title: '订单列表',
+                requiresAuth: true
+              },
+            },
+            {
+              path: '/orderDetail',
+              component: getComponent('order', 'orderDetail'),
+              name: 'orderDetail',
+              meta: {
+                title: '订单详情',
+                requiresAuth: true
+              }
+            }
+          ]
+        },
+        {
+          path: "/member",
+          component: getComponent('member', 'member'),
+          name: "member",
+          meta: {
+            title: "会员",
+            requiresAuth: true
+          },
+          children: [
+            {
+              path: "/memManage",
+              component: getComponent('member', 'memManage'),
+              name: "memManage",
+              meta: {
+                title: "会员管理"
+              },
+            },
+            {
+              path: "/memberLevel",
+              component: getComponent('member', 'memberLevel'),
+              name: "memberLevel",
+              meta: {
+                title: "会员等级"
+              }
+            },
+            {
+              path: "/editMemberLevel",
+              component: getComponent('member', 'editMemberLevel'),
+              name: "editMemberLevel",
+              meta: {
+                title: "会员等级编辑"
+              }
+            },
+          ]
+        },
+        {
+          path: "/financial",
+          component: getComponent('financial', 'financial'),
+          name: "financial",
+          meta: {
+            title: "财务"
+          },
+          children: [
+            {
+              path: "/rechargeFin",
+              component: getComponent('member', 'rechargeFin'),
+              name: "rechargeFin",
+              meta: {
+                title: "充值"
+              },
+            },
+            {
+              path: "/pointsFin",
+              component: getComponent('member', 'pointsFin'),
+              name: "pointsFin",
+              meta: {
+                title: "积分"
+              }
+            },
+            {
+              path: "/balanceFin",
+              component: getComponent('member', 'balanceFin'),
+              name: "balanceFin",
+              meta: {
+                title: "余额"
+              }
+            },
+            {
+              path: "/dealPipelining",
+              component: getComponent('member', 'dealPipelining'),
+              name: "dealPipelining",
+              meta: {
+                title: "交易流水"
+              }
+            },
+          ]
+        },
+        {
           path: '/marketing',
           component: getComponent('marketing', 'marketing'),
           name: 'marketing',
           meta: {
-            title: '营销'
+            title: '营销',
+            requiresAuth: true
           },
           children: [
             {
@@ -100,7 +211,8 @@ const myRouter = new Router({
               component: getComponent('marketing', 'pointsMall'),
               name: 'pointsMall',
               meta: {
-                title: '积分商城'
+                title: '积分商城',
+                requiresAuth: true
               },
             },
             {
@@ -114,29 +226,37 @@ const myRouter = new Router({
           ]
         },
         {
-          path: '/order',
-          component: getComponent('order', 'order'),
-          name: 'order',
+          path: '/setting',
+          component: getComponent('setting', 'setting'),
+          name: 'setting',
           meta: {
-            title: '订单管理'
+            title: '设置'
           },
           children: [
             {
-              path: '/orderList',
-              component: getComponent('order', 'orderList'),
-              name: 'orderList',
+              path: '/pointsMall',
+              component: getComponent('setting', 'employeeManagement'),
+              name: 'employeeManagement',
               meta: {
-                title: '订单列表'
+                title: '员工管理'
               },
             },
             {
-              path: '/orderDetail',
-              component: getComponent('order', 'orderDetail'),
-              name: 'orderDetail',
+              path: '/addPointsMall',
+              component: getComponent('setting', 'jobManagement'),
+              name: 'jobManagement',
               meta: {
-                title: '订单详情'
-              }
-            }
+                title: '职务管理'
+              },
+            },
+            {
+              path: '/addPointsMall',
+              component: getComponent('setting', 'eventsDescription'),
+              name: 'eventsDescription',
+              meta: {
+                title: '活动说明'
+              },
+            },
           ]
         },
         {
@@ -154,21 +274,35 @@ const myRouter = new Router({
 
 // 判断是否存在token
 myRouter.beforeEach((to, from, next) => {
-  NProgress.start()
-  if(to.path !== './login' && !store.state.token){
-    next('/login')
-    NProgress.done() // 结束process
-  } else {
-    next()
-  }
-  if (to.meta.roles) {
-    to.meta.roles.includes(...store.getters.roles) ? next() : next('/404')
+  // NProgress.start()
+  // if(to.path !== './login' && !store.state.token){
+  //   next('/login')
+  //   NProgress.done() // 结束process
+  // } else {
+  //   next()
+  // }
+  // if (to.meta.roles) {
+  //   to.meta.roles.includes(...store.getters.roles) ? next() : next('/404')
+  // } else {
+  //   next()
+  // }
+  let token = window.localStorage.getItem('token')
+  if (to.meta.requiresAuth) {
+    if (token) {
+      next()
+    } else {
+      store.dispatch('logOut')
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } 
   } else {
     next()
   }
 })
 
-myRouter.afterEach(() => {
-  NProgress.done() // 结束process
-})
+// myRouter.afterEach(() => {
+//   NProgress.done() // 结束process
+// })
 export default myRouter
