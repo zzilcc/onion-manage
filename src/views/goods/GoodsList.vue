@@ -2,7 +2,7 @@
  * @Description: 商品列表
  * @Author: 黄紫茜
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-10-08 17:51:38
+ * @LastEditTime: 2019-10-11 17:21:35
  * @LastEditors: 黄紫茜
  -->
 <template>

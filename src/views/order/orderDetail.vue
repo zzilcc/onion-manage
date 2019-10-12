@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-29 10:13:49
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-09-30 16:10:58
+ * @LastEditTime: 2019-10-10 19:59:02
  * @Description: 
  -->
 <template>
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { getAOPDAxios } from "@/api/api.js"; 
 export default {
   data() {
     return {
@@ -76,16 +76,12 @@ export default {
   methods: {
     getOrderDetail() {
       let _this = this;
-      axios
-        .get(
-          "http://192.168.1.161:8102/getAOPD?orderId=" +
-            this.orderDetail.orderId
-        )
+      getAOPDAxios({orderId: this.orderDetail.orderId})
         .then(res => {
           // console.log(res)
-          _this.detailData = res.data.obj;
-          _this.form = res.data.obj.res;
-          _this.list = res.data.obj.resList
+          _this.detailData = res.obj;
+          _this.form = res.obj.res;
+          _this.list = res.obj.resList
         })
         .catch(err => {
           console.log(err);

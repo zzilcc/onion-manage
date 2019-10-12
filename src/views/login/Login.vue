@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-09 15:03:53
+ * @LastEditTime: 2019-10-11 10:10:33
  * @Description: 
  -->
 <template>
@@ -15,7 +15,7 @@
             <el-input v-model="form.username"></el-input>
           </el-form-item>
           <el-form-item label-width="45px" label="密码">
-            <el-input type="password" v-model="form.password"></el-input>
+            <el-input type="password" v-model="form.password" @keyup.enter.native="onSubmit"></el-input>
           </el-form-item>
           <el-form-item label-width="0" >
             <el-button type="primary" @click="onSubmit">登录</el-button>
@@ -52,17 +52,6 @@ export default {
           center: true
         });
       })
-      // loginAxios(this.form) 
-      //   .then(res => {
-      //     this.$router.push({path:'/goodsList'})
-      //   })
-      //   .catch(err => {
-      //     _this.$message({
-      //       message: "账号或者密码有误，请重新输入！",
-      //       type: "error",
-      //       center: true
-      //     });
-      //   })
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-09 17:45:39
+ * @LastEditTime: 2019-10-12 11:55:26
  * @Description: 
  */
 const state = {
@@ -79,6 +79,9 @@ const state = {
     integralRatio: "",
     upgradeAmount: "",
     description: ""
+  },
+  memberInfo: {
+    
   }
 } 
 export default state

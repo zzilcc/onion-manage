@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-10-09 19:54:39
+ * @LastEditTime: 2019-10-10 10:27:42
  * @LastEditors: 黄紫茜
  */
 import Vue from 'vue'
@@ -45,7 +45,8 @@ import
     RadioGroup,
     Radio,
     Checkbox,
-    CheckboxGroup
+    CheckboxGroup,
+    TimePicker
 } 
 from 'element-ui'
 
@@ -88,3 +89,4 @@ Vue.use(RadioGroup)
 Vue.use(Radio)
 Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
+Vue.use(TimePicker)

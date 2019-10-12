@@ -2,7 +2,7 @@
  * @Description: 商品列表
  * @Author: 黄紫茜
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-10-09 19:08:45
+ * @LastEditTime: 2019-10-11 10:06:24
  * @LastEditors: 黄紫茜
  -->
 <template>
@@ -95,8 +95,8 @@
   </div>
 </template>
 <script>
-import axios from "axios";
 import pages from "../../components/pagination";
+import { getAdminOrderListAxios, deleteOrderAxios } from "@/api/api.js"; 
 export default {
   components: {
     pages
@@ -182,51 +182,6 @@ export default {
           "orderStatus": 1, // 订单状态
           "smallProCode": "http://123.img", // 小程序码
         },
-        {
-          "orderId": 111, // 订单号
-          "shippingPerson": 111, // 姓名
-          "shippingPhone": 11111, // 手机号
-          "payType": 1,  // 支付方式
-          "payMoney": 22.22, // 实付金额
-          "orderStatus": 1, // 订单状态
-          "smallProCode": "http://123.img", // 小程序码
-        },
-        {
-          "orderId": 111, // 订单号
-          "shippingPerson": 111, // 姓名
-          "shippingPhone": 11111, // 手机号
-          "payType": 1,  // 支付方式
-          "payMoney": 22.22, // 实付金额
-          "orderStatus": 1, // 订单状态
-          "smallProCode": "http://123.img", // 小程序码
-        },
-        {
-          "orderId": 111, // 订单号
-          "shippingPerson": 111, // 姓名
-          "shippingPhone": 11111, // 手机号
-          "payType": 1,  // 支付方式
-          "payMoney": 22.22, // 实付金额
-          "orderStatus": 1, // 订单状态
-          "smallProCode": "http://123.img", // 小程序码
-        },
-        {
-          "orderId": 111, // 订单号
-          "shippingPerson": 111, // 姓名
-          "shippingPhone": 11111, // 手机号
-          "payType": 1,  // 支付方式
-          "payMoney": 22.22, // 实付金额
-          "orderStatus": 1, // 订单状态
-          "smallProCode": "http://123.img", // 小程序码
-        },
-        {
-          "orderId": 111, // 订单号
-          "shippingPerson": 111, // 姓名
-          "shippingPhone": 11111, // 手机号
-          "payType": 1,  // 支付方式
-          "payMoney": 22.22, // 实付金额
-          "orderStatus": 1, // 订单状态
-          "smallProCode": "http://123.img", // 小程序码
-        },
       ],
       total: 1,
       srcList: []
@@ -289,12 +244,11 @@ export default {
     getOrderList() {
       let _this = this;
       // http://tadmin.yuxinhz.cn/getAdminOrderList
-      axios
-        .post("http://192.168.1.161:8102/getAdminOrderList", this.reqParam)
+      getAdminOrderListAxios(this.reqParam)
         .then(res => {
           // console.log(res)
-          _this.tableData = res.data.obj.orderList;
-          _this.total = res.data.obj.totalNum;
+          _this.tableData = res.obj.orderList;
+          _this.total = res.obj.totalNum;
         })
         .catch(err => {
           console.log(err);
@@ -316,8 +270,7 @@ export default {
      */
     okClick() {
       let _this = this;
-      axios
-        .post("http://192.168.1.161:8102/deleteOrder", {orderId: this.reqParam.orderId})
+      deleteOrderAxios({orderId: this.reqParam.orderId})
         .then(res => {
           // console.log(res)
         })

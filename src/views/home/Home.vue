@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-08 17:10:03
+ * @LastEditTime: 2019-10-11 16:02:34
  * @Description: 
  -->
 <template>
@@ -43,62 +43,7 @@
       <section class="onion-index-mian">
         <!-- 左侧导航 -->
         <section class="onion-index-mian-left">
-          <el-row class="tac">
-            <el-col :span="4">
-              <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
-                <el-submenu v-for="(item) in leftNav" :key="item.id" :index="item.index">
-                  <template slot="title">
-                    <i :class="item.class"></i>
-                    <span v-text="item.name"></span>
-                  </template>
-                  <el-menu-item-group v-for="(item2, index2) in item.children" :key="index2">
-                    <router-link :to="item2.url">
-                      <el-menu-item :index="item2.index" v-text="item2.name"></el-menu-item>
-                    </router-link>
-                  </el-menu-item-group>
-                </el-submenu>
-                <!-- <el-submenu index="1">
-                  <template slot="title">
-                    <i class="el-icon-s-tools"></i>
-                    <span>商品</span>
-                  </template>
-                  <el-menu-item-group>
-                    <router-link to="goodsList">
-                      <el-menu-item index="1-1">商品管理</el-menu-item>
-                    </router-link>
-                    <router-link to="orderGoods">
-                      <el-menu-item index="1-2">商品下单</el-menu-item>
-                    </router-link>
-                    <router-link to="goodsCategories">
-                      <el-menu-item index="1-3">分类管理</el-menu-item>
-                    </router-link>
-                  </el-menu-item-group>
-                </el-submenu>
-                <el-submenu index="2">
-                  <template slot="title">
-                    <i class="el-icon-user-solid"></i>
-                    <span>订单管理</span>
-                  </template>
-                  <el-menu-item-group>
-                    <router-link to="orderList">
-                      <el-menu-item index="1-1">订单管理</el-menu-item>
-                    </router-link>
-                  </el-menu-item-group>
-                </el-submenu>
-                <el-submenu index="3">
-                  <template slot="title">
-                    <i class="el-icon-user-solid"></i>
-                    <span>营销</span>
-                  </template>
-                  <el-menu-item-group>
-                    <router-link to="pointsMall">
-                      <el-menu-item index="1-1">积分商城</el-menu-item>
-                    </router-link>
-                  </el-menu-item-group>
-                </el-submenu> -->
-              </el-menu>
-            </el-col>
-          </el-row>
+          <el-tree :data="leftNav" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
         </section>
         <section class="onion-index-mian-content">
           <!-- <button @click="toggleClick" v-text="isCollapse? '展开': '收缩'"></button> -->
@@ -224,9 +169,28 @@ export default {
           children: [
             {
               name: "积分商城",
-              index: "1-1",
-              url: "/pointsMall",
-              children: []
+              index: "5-1",
+              url: "",
+              children: [
+                {
+                  name: "商品列表",
+                  index: "5-1-1",
+                  url: "/pointsMall",
+                  children: []
+                },
+                {
+                  name: "添加商品-积分",
+                  index: "5-1-2",
+                  url: "/addPointsMall",
+                  children: []
+                },
+                {
+                  name: "兑换订单",
+                  index: "5-1-3",
+                  url: "/redeemOrders",
+                  children: []
+                },
+              ]
             }
           ]
         },
@@ -236,12 +200,6 @@ export default {
           index: "6",
           class: "",
           children: [
-            {
-              name: "员工管理",
-              index: "1-1",
-              url: "/employeeManagement",
-              children: []
-            },
             {
               name: "职务管理",
               index: "1-2",
@@ -257,6 +215,10 @@ export default {
           ]
         },
       ],
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
       isCollapse: false,
       user: {
         userName: "黄紫茜"
@@ -326,20 +288,10 @@ export default {
       }
       this.fullscreen = !this.fullscreen;
     },
-    /**
-     * 获取分类树形结构
-     */
-    getTreeCategory() {
-      let _this = this;
-      axios
-        .get("http://tadmin.yuxinhz.cn/api/category/getTreeCategory", {})
-        .then(res => {
-          // console.log(res)
-          _this.$store.commit("categoryTreeData", res.data.obj.categoryList);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    handleNodeClick (data) {
+      if (data.children.length < 1) {
+        this.$router.push({'path': data.url})
+      }
     }
   }
 };
@@ -403,6 +355,7 @@ export default {
       top: 0;
       left: 0;
       text-align: left;
+      border-right: 1px solid #f7efef;
     }
     .onion-index-mian-content {
       height: 100%;
@@ -422,7 +375,6 @@ export default {
 .onion-breadcrumb {
   padding-bottom: 20px;
 }
-
 .avatar-container {
   height: 50px;
   display: inline-block;

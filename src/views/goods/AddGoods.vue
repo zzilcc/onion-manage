@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: huangziqian
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-10-09 19:44:27
+ * @LastEditTime: 2019-10-11 16:05:05
  * @LastEditors: 黄紫茜
  -->
 <template>
@@ -220,14 +220,13 @@ export default {
     submitUpload(content) {
       let formData = new FormData();
       formData.append("file", content.file);
-      let config = {
-        "Content-Type": "multipart/form-data"
-      };
+      // let config = {
+      //   "Content-Type": "multipart/form-data"
+      // };
       let _this = this;
-      axios
-        .post("http://192.168.1.161:8102/fileUpload", formData, config)
-        .then(function(response) {
-          _this.imageUrl = response.data.obj.url
+      fileUploadAxios(formData)
+        .then(res => {
+           _this.imageUrl = res.obj.url
         })
         .catch(function(error) {
           console.log(error);
@@ -240,10 +239,9 @@ export default {
         "Content-Type": "multipart/form-data"
       };
       let _this = this;
-      axios
-        .post("http://192.168.1.161:8102/fileUpload", formData, config)
-        .then(function(response) {
-          _this.imgList.push(response.data.obj)
+       fileUploadAxios(formData)
+        .then(res => {
+           _this.imgList.push(res.obj)
         })
         .catch(function(error) {
           console.log(error);
@@ -295,9 +293,11 @@ export default {
         });
     }
   },
-  mounted() {
-    this.getTreeCategory();
-    this.flag = this.$route.query.flag;
+  created() {
+    // this.getTreeCategory();
+  },
+  mounted () {
+     this.flag = this.$route.query.flag;
   }
 };
 </script>

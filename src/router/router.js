@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-25 14:15:13
- * @LastEditTime: 2019-10-09 17:35:12
+ * @LastEditTime: 2019-10-10 17:37:58
  * @LastEditors: 黄紫茜
  */
 import Vue from 'vue'
@@ -138,6 +138,14 @@ const myRouter = new Router({
               },
             },
             {
+              path: "/editMemberMan",
+              component: getComponent('member', 'editMemberMan'),
+              name: "editMemberMan",
+              meta: {
+                title: "会员详情"
+              },
+            },
+            {
               path: "/memberLevel",
               component: getComponent('member', 'memberLevel'),
               name: "memberLevel",
@@ -223,6 +231,15 @@ const myRouter = new Router({
                 title: '添加商品'
               },
             },
+            {
+              path: '/redeemOrders',
+              component: getComponent('marketing', 'redeemOrders'),
+              name: 'redeemOrders',
+              meta: {
+                title: '兑换订单'
+              },
+            },
+            
           ]
         },
         {
@@ -234,15 +251,7 @@ const myRouter = new Router({
           },
           children: [
             {
-              path: '/pointsMall',
-              component: getComponent('setting', 'employeeManagement'),
-              name: 'employeeManagement',
-              meta: {
-                title: '员工管理'
-              },
-            },
-            {
-              path: '/addPointsMall',
+              path: '/jobManagement',
               component: getComponent('setting', 'jobManagement'),
               name: 'jobManagement',
               meta: {
@@ -250,7 +259,7 @@ const myRouter = new Router({
               },
             },
             {
-              path: '/addPointsMall',
+              path: '/eventsDescription',
               component: getComponent('setting', 'eventsDescription'),
               name: 'eventsDescription',
               meta: {

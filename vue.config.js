@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:45:28
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-08 17:52:58
+ * @LastEditTime: 2019-10-11 18:01:31
  * @Description: 
  */
 const path = require('path');
@@ -84,9 +84,16 @@ module.exports = {
   pwa: {},
   // 配置 webpack-dev-server 行为。
   devServer: {
-    port: 3001,
-    open: true,
-    proxy: ''
+    proxy: {
+      '/apiV1': {
+        target: 'http://tadmin.yuxinhz.cn',
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/onion-manage': ''
+        }
+      }
+    }
   },
   // 第三方插件的选项
   pluginOptions: {},

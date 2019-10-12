@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-09 17:46:46
+ * @LastEditTime: 2019-10-12 11:56:24
  * @Description: 
  */
 // import {
@@ -38,6 +38,9 @@ const mutations = {
   },
   memberLevelRow(state, object) {
     state.memberLevelRow = object
-  }
+  },
+  memberInfo(state, object) {
+    state.memberInfo = object
+  },
 }
 export default mutations
