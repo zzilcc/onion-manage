@@ -2,10 +2,10 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-12 16:23:20
+ * @LastEditTime: 2019-10-12 19:01:21
  * @Description: 
  */
-let isDebugger = true
+let isDebugger = false
 let hasApi = !isDebugger ? '/api' : ''
 import {get,post} from './request';
 // 登陆
@@ -31,6 +31,8 @@ export const fileUploadAxios=(param)=>post(hasApi + 'api/fileUpload', param) // 
 export const deleteOrderAxios=(param)=>post(hasApi + '/deleteOrder', param) // 取消订单接口
 export const getAOPDAxios=(param)=>get(hasApi + '/getAOPD', param) // 后台管理系统查询订单详情
 export const getAdminOrderListAxios=(param)=>post(hasApi + '/getAdminOrderList', param) // 后台管理系统订单列表查询
+export const selectAllMemberBox=(param)=>get(hasApi + '/selectAllMemberBox', param) // 商品订单获取会员信息
+export const selectUserDiscountlist=(param)=>get(hasApi + '/selectUserDiscountlist', param) // 查询会员所有享受的折扣
 // 积分
 export const integralGoodsListAxios = (param) => get(hasApi + '/integralGoods/list', param) // 查询积分商品列表
 export const soldOutIntegralGoodsAxios = (param) => post(hasApi + '/integralGoods/soldOut', param) // 下架积分商品

@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-29 15:32:44
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-09 19:07:57
+ * @LastEditTime: 2019-10-12 19:19:10
  * @Description: 
  -->
 <template>
@@ -82,11 +82,15 @@
         class="demo-form-inline onion-orderGoods-left-add_form"
         label-width="100px"
       >
-        <el-form-item label="姓名" >
-          <el-input v-model="userInfo.customerName" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号" >
-          <el-input v-model="userInfo.customerPhoneNum" placeholder="请输入"></el-input>
+        <el-form-item label="姓名/手机号" >
+          <el-select v-model="reqParam.memberInfo" @change="memberChangeEvent"  placeholder="">
+            <el-option
+              v-for="item in memberInfoOpt"
+              :key="item.userId"
+              :label="item.userName + '/'+ item.phone"
+              :value="item.userName + '/' + item.phone"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="会员折扣" >
           <el-input v-model="userInfo.memDiscount"  disabled="disabled"></el-input>
@@ -114,6 +118,7 @@
 import axios from "axios";
 import SelectTree from "../../components/tree/select-tree.vue";
 import pages from "../../components/pagination";
+import {selectAllMemberBox, selectUserDiscountlist, getDiscountsrList} from '../../api/api'
 export default {
   components: {
     SelectTree,
@@ -127,6 +132,7 @@ export default {
         dialogMsg: ""
       },
       reqParam: {
+        memberInfo: "",
         suppliesName: "",
         categoryId: "",
         pageSize: 2,
@@ -185,7 +191,10 @@ export default {
         memDiscount: '', // 会员折扣
         favorPrice: '', // 优惠活动
         distribFee: '' // 运费
-      }
+      },
+      memberInfoOpt: [],
+      duties: {}, // 职务list
+      dutiesId:''
     };
   },
   computed: {
@@ -308,10 +317,74 @@ export default {
     okClick() {
       this.dialog.dialogVisible = false;
     },
+    /**
+     * @description: 获取会员信息
+     * @param {type} 
+     * @return: 
+     */  
+    getMemberInfo () {
+      let _this = this
+      selectAllMemberBox({})
+        .then(res => {
+          if (res.code === 200) {
+            _this.memberInfoOpt = res.obj
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    /**
+     * @description: 查询会员所有享受的折扣
+     * @param {type} 
+     * @return: 
+     */
+    getMemberDiscountList () {
+      debugger
+      let _this = this
+      this.$store.state
+      selectUserDiscountlist()
+        .then(res => {
+          
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    /**
+     * @description: 人员信息下拉框change事件
+     * @param {type} 
+     * @return: 
+     */  
+    memberChangeEvent (val) {
+      debugger
+    },
+    /**
+      * @description: 获取职务信息
+      * @param {type} 
+      * @return: 
+      */
+     getJobData () {
+       var _this = this
+       getDiscountsrList({}).then(res => {
+         _this.duties = res.obj.list
+         debugger
+         for (var i in _this.duties) {
+           if (_this.duties[i].postName === _this.$store.state.userInfo.postName) {
+             _this.userInfo.memDiscount = _this.duties[i].discountProportion
+             _this.dutiesId = _this.duties[i].id
+           }
+         }
+       }).catch(err => {
+         console.log(err)
+       })
+     }
   },
   created() {
     this.getTreeCategory();
     this.getGoodsList();
+    this.getMemberInfo()
+    this.getJobData()
   }
 };
 </script>

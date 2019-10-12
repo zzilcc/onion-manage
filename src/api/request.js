@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-12 10:58:04
+ * @LastEditTime: 2019-10-12 18:12:17
  * @Description: 
  */
 import axios from "axios";
@@ -10,8 +10,9 @@ import router from "../router/router";
 // import {messages} from '../assets/js/common.js'
 import store from '../store/store'
 axios.defaults.timeout = 6000000;
-// axios.defaults.baseURL = "http://tadmin.yuxinhz.cn";
-axios.defaults.baseURL = "http://192.168.1.161:8102";
+axios.defaults.baseURL = "http://tadmin.yuxinhz.cn";
+// axios.defaults.baseURL = "http://192.168.1.161:8102";
+// axios.defaults.baseURL = process.env.VUE_APP_LOGOUT_URL;
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded;charset=UTF-8";
 let loading = null;
