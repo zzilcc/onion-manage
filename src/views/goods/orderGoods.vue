@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-29 15:32:44
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-12 19:19:10
+ * @LastEditTime: 2019-10-14 11:39:06
  * @Description: 
  -->
 <template>
@@ -88,21 +88,26 @@
               v-for="item in memberInfoOpt"
               :key="item.userId"
               :label="item.userName + '/'+ item.phone"
-              :value="item.userName + '/' + item.phone"
+              :value="item.userId"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="会员折扣" >
-          <el-input v-model="userInfo.memDiscount"  disabled="disabled"></el-input>
+        <el-form-item label="会员折后价格" >
+          <el-input v-model="userInfo.memDiscountPrice"  disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item label="参与活动" >
-          <el-input v-model="userInfo.favorPrice" placeholder="请输入"></el-input>
+         <el-radio v-model="isEvenet" label="1">是</el-radio>
+          <el-radio v-model="isEvenet" label="2">否</el-radio>
+        </el-form-item>
+        <el-form-item label="减免金额" v-if="isEvenet === '1'">
+           <el-input v-model="userInfo.favorPrice" placeholder="请输入" ></el-input>
+           <span v-text="'最高减免: '+ maxFavorPrice + '元'"></span>
         </el-form-item>
         <el-form-item label="运费">
           <el-input v-model="userInfo.distribFee" placeholder="请输入运费"></el-input>
         </el-form-item>
       </el-form>
-      <p>合计: 99元</p>
+      <p>合计: <span v-text="userInfo.payMoney"></span></p>
       <el-button type="primary" @click="submitOrder">提交订单</el-button>
     </section>
     <!-- <el-dialog title="提示" :visible.sync="dialog.dialogVisible" width="30%">
@@ -188,13 +193,18 @@ export default {
       userInfo: {
         customerName: '', // 客户名字
         customerPhoneNum: '' , // 客户手机号
-        memDiscount: '', // 会员折扣
+        memDiscountPrice: '', // 会员折扣
         favorPrice: '', // 优惠活动
         distribFee: '' // 运费
       },
       memberInfoOpt: [],
       duties: {}, // 职务list
-      dutiesId:''
+      discountProportion: 1, // 职务折扣
+      dutiesId:'', // 职务id
+      isEvenet: '', // 是否参与活动
+      maxFavorPrice: "0", // 最高减免金额
+      totalAmount: 0, // 总金额
+      memDiscount: 1, // 会员折扣
     };
   },
   computed: {
@@ -234,7 +244,7 @@ export default {
         .get("http://tadmin.yuxinhz.cn/api/category/getTreeCategory", {})
         .then(res => {
           // console.log(res)
-          _this.$store.commit("categoryTreeData", res.data.obj.categoryList);
+          _this.$store.commit("categoryTreeData", res.obj.categoryList);
         })
         .catch(err => {
           console.log(err);
@@ -257,8 +267,8 @@ export default {
         .get("http://tadmin.yuxinhz.cn/api/product/list", this.reqParam)
         .then(res => {
           // console.log(res)
-          _this.tableData = res.data.obj.page.records;
-          _this.total = res.data.obj.page.total;
+          _this.tableData = res.obj.page.records;
+          _this.total = res.obj.page.total;
         })
         .catch(err => {
           console.log(err);
@@ -272,6 +282,16 @@ export default {
 
     handleSelectionChange(val) {
       this.orderGoodsList = JSON.parse(JSON.stringify(val));
+      // 计算总金额
+      this.totalAmount = 0
+      for (var i in val) {
+        this.totalAmount += parseInt(val[i].price)
+      }
+      debugger
+      this.userInfo.memDiscountPrice = this.totalAmount * parseInt(this.memDiscount)
+      // 计算最大减免金额= 会员折后价格*职务折扣
+      this.maxFavorPrice = this.userInfo.memDiscountPrice * parseInt(this.discountProportion) * 0.01
+      this.maxFavorPrice = this.maxFavorPrice.toFixed(2)
     },
     /**
      * @description: 提交订单
@@ -335,29 +355,23 @@ export default {
         })
     },
     /**
-     * @description: 查询会员所有享受的折扣
-     * @param {type} 
-     * @return: 
-     */
-    getMemberDiscountList () {
-      debugger
-      let _this = this
-      this.$store.state
-      selectUserDiscountlist()
-        .then(res => {
-          
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    /**
      * @description: 人员信息下拉框change事件
      * @param {type} 
      * @return: 
      */  
     memberChangeEvent (val) {
       debugger
+      let _this = this
+      selectUserDiscountlist({userId: val, postId: this.dutiesId})
+        .then(res => {
+          if (res.code === 200) {
+            _this.memDiscount = res.obj.discount
+            _this.userInfo.memDiscountPrice = _this.totalAmount * parseInt(_this.memDiscount) * 0.01
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     /**
       * @description: 获取职务信息
@@ -368,10 +382,9 @@ export default {
        var _this = this
        getDiscountsrList({}).then(res => {
          _this.duties = res.obj.list
-         debugger
          for (var i in _this.duties) {
            if (_this.duties[i].postName === _this.$store.state.userInfo.postName) {
-             _this.userInfo.memDiscount = _this.duties[i].discountProportion
+             _this.discountProportion = _this.duties[i].discountProportion
              _this.dutiesId = _this.duties[i].id
            }
          }
@@ -391,6 +404,9 @@ export default {
 
 <style lang="less">
 @import "../../style/table.less";
+p, span{
+  color: #333;
+}
 .onion-orderGoods {
   vertical-align: middle;
   height: 100%;

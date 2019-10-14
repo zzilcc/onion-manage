@@ -2,7 +2,7 @@
  * @Author: 黄紫茜
  * @Date: 2019-09-27 14:46:04
  * @LastEditors: 黄紫茜
- * @LastEditTime: 2019-10-12 19:01:21
+ * @LastEditTime: 2019-10-14 11:00:49
  * @Description: 
  */
 let isDebugger = false
@@ -32,7 +32,7 @@ export const deleteOrderAxios=(param)=>post(hasApi + '/deleteOrder', param) // �
 export const getAOPDAxios=(param)=>get(hasApi + '/getAOPD', param) // 后台管理系统查询订单详情
 export const getAdminOrderListAxios=(param)=>post(hasApi + '/getAdminOrderList', param) // 后台管理系统订单列表查询
 export const selectAllMemberBox=(param)=>get(hasApi + '/selectAllMemberBox', param) // 商品订单获取会员信息
-export const selectUserDiscountlist=(param)=>get(hasApi + '/selectUserDiscountlist', param) // 查询会员所有享受的折扣
+export const selectUserDiscountlist=(param)=>post(hasApi + '/selectUserDiscountlist', param) // 查询会员所有享受的折扣
 // 积分
 export const integralGoodsListAxios = (param) => get(hasApi + '/integralGoods/list', param) // 查询积分商品列表
 export const soldOutIntegralGoodsAxios = (param) => post(hasApi + '/integralGoods/soldOut', param) // 下架积分商品
